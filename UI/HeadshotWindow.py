@@ -12,7 +12,6 @@ class HeadshotWindow(QWidget):
         self.layout = QGridLayout()
         self.window_setting()
         self.init_ui()
-        self.load()
 
     def window_setting(self) -> None:
         self.setLayout(self.layout)
@@ -48,14 +47,15 @@ class HeadshotWindow(QWidget):
             self.export_file_button.clicked.connect(self.export_open_file_dialog)
             self.layout.addWidget(self.export_file_button, 1, 5, 1, 1)
 
+        def init_information() -> None:
+            self.design = QLabel('Design:')
+            self.layout.addWidget(self.design, 2, 0, 1, 1)
+            self.image = QLabel('File name:')
+            self.layout.addWidget(self.image, 3, 0, 1, 1)
+
         init_import()
         init_export()
-
-        self.x = QLabel(':')
-        self.layout.addWidget(self.x, 10, 10)
-
-    def load(self):
-        pass
+        init_information()
 
     def _import_open_file_dialog(self) -> None:
         folder_path = QFileDialog.getExistingDirectory(self, 'Select a folder')

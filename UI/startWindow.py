@@ -40,10 +40,7 @@ class StartWindow(QWidget):
 
     def done_pressed(self):
         if self.task_radio_headshot.isChecked():
-            try:
-                self.subwindow = HeadshotWindow()
-                self.subwindow.show()
-            except Exception as e:
-                print(f"Error: {e}")
+            self.headshot_window = HeadshotWindow()
+            self.headshot_window.show()
 
 

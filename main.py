@@ -1,10 +1,10 @@
+from PyQt6 import QtWidgets
 import sys
-from PyQt5.QtWidgets import QApplication
-from UI.startWindow import StartWindow
 
+from src.Controller import MainWindow_controller
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = StartWindow()
+    app = QtWidgets.QApplication(sys.argv)
+    window = MainWindow_controller()
     window.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

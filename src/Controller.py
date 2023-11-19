@@ -1,5 +1,5 @@
 from PyQt6 import QtWidgets, QtGui, QtCore
-from PyQt6.QtWidgets import QFileDialog
+from PyQt6.QtWidgets import QFileDialog, QMessageBox
 
 from src.UI.Ui_Dialog import Ui_Dialog
 
@@ -14,6 +14,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
     def setup_control(self):
         self.ui.ImportOpenBtn.clicked.connect(self.import_path)
         self.ui.ExportOpenBtn.clicked.connect(self.export_path)
+        self.ui.LoadPath.clicked.connect(self.load_path)
 
     def import_path(self) -> None:
         folder_path = QFileDialog.getExistingDirectory(self, 'Select a folder')
@@ -24,3 +25,12 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         folder_path = QFileDialog.getExistingDirectory(self, 'Select a folder')
         if folder_path:
             self.ui.ExportPath.setText(folder_path)
+
+    def load_path(self) -> None:
+        self.get_generated_path()
+
+    def get_generated_path(self):
+        if self.ui.importPath.text():
+            pass
+        else:
+            QMessageBox.critical(None, "Error", "請先指定輸入路徑")

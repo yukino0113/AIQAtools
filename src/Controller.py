@@ -5,7 +5,7 @@ from src.UI.Ui_Dialog import Ui_Dialog
 from src.function.GeneratedImage import GeneratedImage
 
 
-class MainWindow_controller(QtWidgets.QMainWindow):
+class MainWindowController(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.genImage = None
@@ -51,9 +51,11 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         pass
 
     def previous_image(self):
+        self.genImage.previous()
         pass
 
     def pass_image(self):
+        self.genImage.next()
         # todo
         #  will pop hint window?
         pass
@@ -61,7 +63,8 @@ class MainWindow_controller(QtWidgets.QMainWindow):
     def next_image(self):
         if not self.ui.exportPath.text():
             QMessageBox.critical(None, "Error", "請先指定輸出路徑")
+        else:
+            self.genImage.next()
         # todo
         #  if no CB, will pop window to tell user wil save to no issue folder.
-
 

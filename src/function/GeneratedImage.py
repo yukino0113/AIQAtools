@@ -8,17 +8,16 @@ class GeneratedImage:
         self.path = path
         self.imageMaxCount = 0
         self.imagePathDic = self._get_path()
-        # self.styleOrder = 0
         self.ImageOrder = 0
-        if self.imagePathDic:
-            self.currentStyle = list(self.imagePathDic.keys())[self.ImageOrder // 80]
-            self.currentImage = list(self.imagePathDic[self.currentStyle].keys())[self.ImageOrder]
 
-        # self.testVar = ic(self.ImageOrder)
+        if self.imagePathDic:
+            self._refresh_current_style_and_image()
+
+        self.testVar = ic(self.imageMaxCount)
 
     def _refresh_current_style_and_image(self):
         self.currentStyle = list(self.imagePathDic.keys())[self.ImageOrder // 80]
-        self.currentImage = list(self.imagePathDic[self.currentStyle].keys())[self.ImageOrder]
+        self.currentImage = list(self.imagePathDic[self.currentStyle].keys())[self.ImageOrder % 80]
 
     def _get_path(self) -> dict:
         image_dict = {}

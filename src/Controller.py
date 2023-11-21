@@ -57,7 +57,7 @@ class MainWindowController(QtWidgets.QMainWindow):
 
         def set_fit(view, scene):
             aspect_ratio = scene.sceneRect().height() / scene.sceneRect().width()
-            view_width = view.viewport().width() * 0.97
+            view_width = view.viewport().width() * 0.95
             view_height = aspect_ratio * view_width
             view.setTransform(
                 QtGui.QTransform().scale(

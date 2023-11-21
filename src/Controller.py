@@ -1,6 +1,7 @@
 import os
 
 from PyQt6 import QtWidgets, QtGui, QtCore
+from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import QFileDialog, QMessageBox
 from icecream import ic
 
@@ -39,21 +40,42 @@ class MainWindowController(QtWidgets.QMainWindow):
             QMessageBox.critical(None, "Error", "請先指定輸入路徑")
         else:
             self.genImage = GeneratedImage(self.ui.importPath.text())
-            self.load_image()
+            try:
+                self.load_image()
+            except Exception as e:
+                print(e)
 
     def load_image(self):
-        gen_scene = QtWidgets.QGraphicsScene()
-        gen_scene.addPixmap(QtGui.QPixmap(self.genImage.get_current_image_path()))
+
+        def set_scene(path):
+            scene = QtWidgets.QGraphicsScene()
+            scene.addPixmap(QtGui.QPixmap(path))
+            return scene
+
+        def set_fit(view, scene):
+            aspect_ratio = scene.sceneRect().height() / scene.sceneRect().width()
+            view_width = view.viewport().width() * 0.97
+            view_height = aspect_ratio * view_width
+            view.setTransform(
+                QtGui.QTransform().scale(
+                    view_width / view.sceneRect().width(),
+                    view_height / view.sceneRect().height()))
+
+        def set_black_bg(view):
+            view.setBackgroundBrush(QColor(0, 0, 0))
+
+        gen_scene = set_scene(QtGui.QPixmap(self.genImage.get_current_image_path()))
         self.ui.generatedPic.setScene(gen_scene)
+        set_fit(self.ui.generatedPic, gen_scene)
+        set_black_bg(self.ui.generatedPic)
 
         self.ui.fileNameLabel.setText(self.genImage.currentImage)
 
-        ic(os.path.dirname(os.path.realpath(__file__)))
-        ref_file_path = ic(f'{os.path.dirname(os.path.realpath(__file__))}\\..\\reference_image\\'
-                           f'{"_".join(self.genImage.currentImage.split("_")[:2])}.jpg')
-        ref_scene = QtWidgets.QGraphicsScene()
-        ref_scene.addPixmap(QtGui.QPixmap(ref_file_path))
+        ref_scene = set_scene(f'{os.path.dirname(os.path.realpath(__file__))}\\..\\reference_image\\'
+                         f'{"_".join(self.genImage.currentImage.split("_")[:2])}.jpg')
         self.ui.referencePic.setScene(ref_scene)
+        set_fit(self.ui.referencePic, ref_scene)
+        set_black_bg(self.ui.referencePic)
 
     def previous_image(self):
         self.genImage.previous()
@@ -72,9 +94,8 @@ class MainWindowController(QtWidgets.QMainWindow):
         # todo
         #  if no CB, will pop window to tell user wil save to no issue folder.
 
-        #if not self.ui.exportPath.text():
+        # if not self.ui.exportPath.text():
         #    QMessageBox.critical(None, "Error", "請先指定輸出路徑")
-        #else:
-            self.genImage.next()
-            self.load_image()
-
+        # else:
+        self.genImage.next()
+        self.load_image()

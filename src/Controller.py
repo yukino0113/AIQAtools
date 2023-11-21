@@ -22,6 +22,8 @@ class MainWindowController(QtWidgets.QMainWindow):
         self.ui.exportOpenBtn.clicked.connect(self.export_path)
         self.ui.loadPath.clicked.connect(self.load_path)
         self.ui.nextPic.clicked.connect(self.next_image)
+        self.ui.skipPic.clicked.connect(self.skip_image)
+        self.ui.previousPic.clicked.connect(self.previous_image)
 
         self.ui.importPath.setText("C:\\Users\\jethro_wang\\Desktop")
 
@@ -64,6 +66,8 @@ class MainWindowController(QtWidgets.QMainWindow):
         def set_black_bg(view):
             view.setBackgroundBrush(QColor(0, 0, 0))
 
+        # todo: fit image
+
         gen_scene = set_scene(QtGui.QPixmap(self.genImage.get_current_image_path()))
         self.ui.generatedPic.setScene(gen_scene)
         set_fit(self.ui.generatedPic, gen_scene)
@@ -79,11 +83,10 @@ class MainWindowController(QtWidgets.QMainWindow):
 
     def previous_image(self):
         self.genImage.previous()
-
         self.load_image()
         pass
 
-    def pass_image(self):
+    def skip_image(self):
         self.genImage.next()
         # todo
         #  will pop hint window?

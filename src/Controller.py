@@ -25,7 +25,7 @@ class MainWindowController(QtWidgets.QMainWindow):
         self.ui.skipPic.clicked.connect(self.skip_image)
         self.ui.previousPic.clicked.connect(self.previous_image)
 
-        self.ui.importPath.setText("C:\\Users\\jethro_wang\\Desktop")
+        self.ui.importPath.setText("C:\\Users\\jethr\\Desktop")
 
     def import_path(self) -> None:
         folder_path = QFileDialog.getExistingDirectory(self, 'Select a folder')
@@ -41,13 +41,14 @@ class MainWindowController(QtWidgets.QMainWindow):
         if not self.ui.importPath.text():
             QMessageBox.critical(None, "Error", "請先指定輸入路徑")
         else:
-            self.genImage = GeneratedImage(self.ui.importPath.text())
             try:
+                self.genImage = GeneratedImage(self.ui.importPath.text())
                 self.load_image()
             except Exception as e:
                 print(e)
 
     def load_image(self):
+
 
         def set_scene(path):
             scene = QtWidgets.QGraphicsScene()
@@ -67,19 +68,22 @@ class MainWindowController(QtWidgets.QMainWindow):
             view.setBackgroundBrush(QColor(0, 0, 0))
 
         # todo: fit image
+        
+        if not self.genImage.imagePathDic:
+            QMessageBox.critical(None, "Error", "The path doesn't have any style folder")
+        else:
+            gen_scene = set_scene(QtGui.QPixmap(self.genImage.get_current_image_path()))
+            self.ui.generatedPic.setScene(gen_scene)
+            set_fit(self.ui.generatedPic, gen_scene)
+            set_black_bg(self.ui.generatedPic)
 
-        gen_scene = set_scene(QtGui.QPixmap(self.genImage.get_current_image_path()))
-        self.ui.generatedPic.setScene(gen_scene)
-        set_fit(self.ui.generatedPic, gen_scene)
-        set_black_bg(self.ui.generatedPic)
+            self.ui.fileNameLabel.setText(self.genImage.currentImage)
 
-        self.ui.fileNameLabel.setText(self.genImage.currentImage)
-
-        ref_scene = set_scene(f'{os.path.dirname(os.path.realpath(__file__))}\\..\\reference_image\\'
-                         f'{"_".join(self.genImage.currentImage.split("_")[:2])}.jpg')
-        self.ui.referencePic.setScene(ref_scene)
-        set_fit(self.ui.referencePic, ref_scene)
-        set_black_bg(self.ui.referencePic)
+            ref_scene = set_scene(f'{os.path.dirname(os.path.realpath(__file__))}\\..\\reference_image\\'
+                                  f'{"_".join(self.genImage.currentImage.split("_")[:2])}.jpg')
+            self.ui.referencePic.setScene(ref_scene)
+            set_fit(self.ui.referencePic, ref_scene)
+            set_black_bg(self.ui.referencePic)
 
     def previous_image(self):
         self.genImage.previous()

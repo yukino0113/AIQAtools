@@ -10,8 +10,9 @@ class GeneratedImage:
         self.imagePathDic = self._get_path()
         # self.styleOrder = 0
         self.ImageOrder = 0
-        self.currentStyle = list(self.imagePathDic.keys())[self.ImageOrder // 80]
-        self.currentImage = list(self.imagePathDic[self.currentStyle].keys())[self.ImageOrder]
+        if self.imagePathDic:
+            self.currentStyle = list(self.imagePathDic.keys())[self.ImageOrder // 80]
+            self.currentImage = list(self.imagePathDic[self.currentStyle].keys())[self.ImageOrder]
 
         # self.testVar = ic(self.ImageOrder)
 

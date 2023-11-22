@@ -90,9 +90,11 @@ class MainWindowController(QtWidgets.QMainWindow):
             set_black_bg(self.ui.referencePic)
 
     def previous_image(self):
-        self.genImage.previous()
-        self.load_image()
-        pass
+        if self.genImage.ImageOrder > 1:
+            self.genImage.previous()
+            self.load_image()
+        else:
+            QMessageBox.critical(None, "Error", "This is the first image")
 
     def skip_image(self):
         self.genImage.next()

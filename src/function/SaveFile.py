@@ -11,7 +11,9 @@ class SaveFile:
         self.init_create_result_folder()
         self.init_create_style_folder(style)
         self.create_from_template()
-        self.issueTable = {}
+        self.issueFolder = {
+
+        }
 
     def init_create_result_folder(self):
         if not os.path.exists(self.resultPath):
@@ -32,3 +34,10 @@ class SaveFile:
         for name in self._get_issue_template():
             if not os.path.exists(name):
                 os.mkdir(name)
+
+    def save(self, issue: list, image: str):
+        pass
+
+    def load(self, image: str):
+        pass
+

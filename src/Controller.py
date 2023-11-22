@@ -54,13 +54,12 @@ class MainWindowController(QtWidgets.QMainWindow):
             try:
                 self.genImage = GeneratedImage(self.ui.importPath.text())
                 self.load_image()
+            except FileNotFoundError:
+                QMessageBox.critical(None, "Error", "路徑錯誤，請再檢查一次")
 
-                self.ui.nextPic.setEnabled(True)
-                self.ui.skipPic.setEnabled(True)
-                self.ui.previousPic.setEnabled(True)
-
-            except Exception as e:
-                print(e)
+            self.ui.nextPic.setEnabled(True)
+            self.ui.skipPic.setEnabled(True)
+            self.ui.previousPic.setEnabled(True)
 
     def load_image(self):
 

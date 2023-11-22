@@ -13,8 +13,6 @@ class GeneratedImage:
         if self.imagePathDic:
             self._refresh_current_style_and_image()
 
-        self.testVar = ic(self.imageMaxCount)
-
     def _refresh_current_style_and_image(self):
         self.currentStyle = list(self.imagePathDic.keys())[self.ImageOrder // 80]
         self.currentImage = list(self.imagePathDic[self.currentStyle].keys())[self.ImageOrder % 80]

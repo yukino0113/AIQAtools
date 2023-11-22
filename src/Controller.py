@@ -7,6 +7,7 @@ from icecream import ic
 
 from src.UI.Ui_Dialog import Ui_Dialog
 from src.function.GeneratedImage import GeneratedImage
+from src.function.SaveFile import SaveFile
 
 
 class MainWindowController(QtWidgets.QMainWindow):
@@ -35,7 +36,6 @@ class MainWindowController(QtWidgets.QMainWindow):
             self.ui.styleCB,
             self.ui.boneCB,
             self.ui.otherCB]
-
 
     def setup_control(self):
         self.ui.importOpenBtn.clicked.connect(self.import_path)
@@ -74,6 +74,7 @@ class MainWindowController(QtWidgets.QMainWindow):
             try:
                 self.genImage = GeneratedImage(self.ui.importPath.text())
                 self.load_image()
+                self.sl = SaveFile(self.ui.importPath.text())
             except FileNotFoundError:
                 QMessageBox.critical(None, "Error", "路徑錯誤，請再檢查一次")
 
@@ -121,6 +122,10 @@ class MainWindowController(QtWidgets.QMainWindow):
             set_fit(self.ui.referencePic, ref_scene)
             set_black_bg(self.ui.referencePic)
 
+    def reset_cb(self):
+        for cb in self.issueList:
+            cb.setChecked(False)
+
     def previous_image(self):
         if self.genImage.ImageOrder > 0:
             self.genImage.previous()
@@ -129,6 +134,7 @@ class MainWindowController(QtWidgets.QMainWindow):
             QMessageBox.critical(None, "Error", "This is the first image")
 
     def skip_image(self):
+        QtWidgets.QMessageBox.warning(self, "Warning", "尚未實作")
         self.genImage.next()
         # todo
         #  will pop hint window?
@@ -139,8 +145,17 @@ class MainWindowController(QtWidgets.QMainWindow):
         # todo
         #  if no CB, will pop window to tell user wil save to no issue folder.
 
-        # if not self.ui.exportPath.text():
-        #    QMessageBox.critical(None, "Error", "請先指定輸出路徑")
-        # else:
+        issue = []
+        for i in range(len(self.issueList)):
+            if self.issueList[i].isChecked():
+                issue.append(self.issueList[i].text())
+
+        self.sl.save(self.genImage.currentStyle, issue, self.genImage.get_current_image_path())
+
+        self.reset_cb()
+
         self.genImage.next()
         self.load_image()
+
+    def save_modify_image(self):
+        pass

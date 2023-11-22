@@ -29,7 +29,7 @@ class SaveFile:
                   'r', encoding='utf-8') as f:
             return f.read().split('\n')
 
-    def create_from_template(self):
+    def _create_from_template(self):
         os.chdir(os.path.join(self.resultPath, self.style))
         for name in self._get_issue_template():
             if not os.path.exists(name):

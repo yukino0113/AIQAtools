@@ -49,7 +49,6 @@ class MainWindowController(QtWidgets.QMainWindow):
 
     def load_image(self):
 
-
         def set_scene(path):
             scene = QtWidgets.QGraphicsScene()
             scene.addPixmap(QtGui.QPixmap(path))
@@ -57,8 +56,13 @@ class MainWindowController(QtWidgets.QMainWindow):
 
         def set_fit(view, scene):
             aspect_ratio = scene.sceneRect().height() / scene.sceneRect().width()
-            view_width = view.viewport().width() * 0.95
-            view_height = aspect_ratio * view_width
+            ratio = 1
+            while ratio:
+                view_width = view.viewport().width() * ratio
+                view_height = aspect_ratio * view_width
+                if view_height <= self.ui.generatedPic.height() and view_width <= self.ui.generatedPic.width():
+                    break
+                ratio -= 0.05
             view.setTransform(
                 QtGui.QTransform().scale(
                     view_width / view.sceneRect().width(),

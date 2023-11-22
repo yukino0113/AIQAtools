@@ -83,9 +83,9 @@ class MainWindowController(QtWidgets.QMainWindow):
         if not self.genImage.imagePathDic:
             QMessageBox.critical(None, "Error", "The path doesn't have any style folder")
         else:
-            gen_scene = set_scene(QtGui.QPixmap(self.genImage.get_current_image_path()))
-            self.ui.generatedPic.setScene(gen_scene)
-            set_fit(self.ui.generatedPic, gen_scene)
+            self.gen_scene = set_scene(QtGui.QPixmap(self.genImage.get_current_image_path()))
+            self.ui.generatedPic.setScene(self.gen_scene)
+            set_fit(self.ui.generatedPic, self.gen_scene)
             set_black_bg(self.ui.generatedPic)
 
             self.ui.fileNameLabel.setText(self.genImage.currentImage)

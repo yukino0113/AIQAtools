@@ -104,8 +104,6 @@ class MainWindowController(QtWidgets.QMainWindow):
 
         def set_black_bg(view):
             view.setBackgroundBrush(QColor(0, 0, 0))
-
-        # todo: fit image
         
         if not self.genImage.imagePathDic:
             QMessageBox.critical(None, "Error", "The path doesn't have any style folder")

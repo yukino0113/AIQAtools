@@ -97,7 +97,7 @@ class MainWindowController(QtWidgets.QMainWindow):
             set_black_bg(self.ui.referencePic)
 
     def previous_image(self):
-        if self.genImage.ImageOrder > 1:
+        if self.genImage.ImageOrder > 0:
             self.genImage.previous()
             self.load_image()
         else:

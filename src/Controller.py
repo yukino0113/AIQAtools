@@ -25,7 +25,9 @@ class MainWindowController(QtWidgets.QMainWindow):
         self.ui.skipPic.clicked.connect(self.skip_image)
         self.ui.previousPic.clicked.connect(self.previous_image)
 
-        self.ui.importPath.setText("C:\\Users\\jethr\\Desktop")
+        self.ui.nextPic.setEnabled(False)
+        self.ui.skipPic.setEnabled(False)
+        self.ui.previousPic.setEnabled(False)
 
     def import_path(self) -> None:
         folder_path = QFileDialog.getExistingDirectory(self, 'Select a folder')
@@ -44,6 +46,11 @@ class MainWindowController(QtWidgets.QMainWindow):
             try:
                 self.genImage = GeneratedImage(self.ui.importPath.text())
                 self.load_image()
+
+                self.ui.nextPic.setEnabled(True)
+                self.ui.skipPic.setEnabled(True)
+                self.ui.previousPic.setEnabled(True)
+
             except Exception as e:
                 print(e)
 

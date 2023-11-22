@@ -29,6 +29,14 @@ class MainWindowController(QtWidgets.QMainWindow):
         self.ui.skipPic.setEnabled(False)
         self.ui.previousPic.setEnabled(False)
 
+        self.drawing = False
+        self.start_point = None
+        self.end_point = None
+
+        self.ui.generatedPic.mousePressEvent = self.mousePressEvent
+        self.ui.generatedPic.mouseMoveEvent = self.mouseMoveEvent
+        self.ui.generatedPic.mouseReleaseEvent = self.mouseReleaseEvent
+
     def import_path(self) -> None:
         folder_path = QFileDialog.getExistingDirectory(self, 'Select a folder')
         if folder_path:

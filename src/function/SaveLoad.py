@@ -15,7 +15,7 @@ class SaveLoad:
             '身形太壯、怪異肌肉': '1_(男)身形太壯怪異肌肉',
             '胸部過大不自然': '2_(女)胸部過大不自然',
             '胸部形狀位置怪異': '3_(女)胸部形狀位置怪異',
-            '頭髮沒切乾淨突出': '4_頭髮沒切乾淨突出',
+            '頭髮沒切乾淨突出': '4_(女)頭髮沒切乾淨突出',
             '臉切壞': '5_臉切壞',
             '膚色斷差': '6_膚色斷差',
             '手指': '7_手趾',
@@ -53,8 +53,9 @@ class SaveLoad:
 
     def save(self, style: str, issue: list, image: str):
         self.style = style
-        if not os.path.exists(os.path.join(self.resultPath, style)):
-            self._create_from_template()
+        if not os.path.exists(os.path.join(self.resultPath, self.style)):
+            self.init_create_style_folder(self.style)
+        self._create_from_template()
         for i in issue:
             if os.path.basename(image) not in os.listdir(os.path.join(self.resultPath, self.style, self.issueFolder[i])):
                 shutil.copy(image, os.path.join(self.resultPath, self.style, self.issueFolder[i]))

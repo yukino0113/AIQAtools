@@ -7,7 +7,7 @@ from icecream import ic
 
 from src.UI.Ui_Dialog import Ui_Dialog
 from src.function.GeneratedImage import GeneratedImage
-from src.function.SaveFile import SaveFile
+from src.function.SaveLoad import SaveLoad
 
 
 class MainWindowController(QtWidgets.QMainWindow):
@@ -74,9 +74,11 @@ class MainWindowController(QtWidgets.QMainWindow):
             try:
                 self.genImage = GeneratedImage(self.ui.importPath.text())
                 self.load_image()
-                self.sl = SaveFile(self.ui.importPath.text())
+                self.sl = SaveLoad(self.ui.importPath.text())
             except FileNotFoundError:
                 QMessageBox.critical(None, "Error", "路徑錯誤，請再檢查一次")
+            #except IndexError:
+            #    QMessageBox.critical(None, "Error", "路徑包含無圖片的 Style 資料夾，請再檢查一次")
 
             self.ui.nextPic.setEnabled(True)
             self.ui.skipPic.setEnabled(True)

@@ -64,5 +64,5 @@ class SaveLoad:
         for key in list(self.issueFolder.keys()):
             if os.path.basename(image) in os.listdir(os.path.join(self.resultPath, self.style, self.issueFolder[key])):
                 lst.append(key)
-        return ic(lst)
+        return lst
 

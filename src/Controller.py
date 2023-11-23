@@ -131,6 +131,7 @@ class MainWindowController(QtWidgets.QMainWindow):
     def previous_image(self):
         if self.genImage.ImageOrder > 0:
             self.genImage.previous()
+            self.sl.load(self.genImage.get_current_image_path())
             self.load_image()
         else:
             QMessageBox.critical(None, "Error", "This is the first image")

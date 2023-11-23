@@ -1,8 +1,10 @@
 import os
 import shutil
 
+from icecream import ic
 
-class SaveFile:
+
+class SaveLoad:
 
     def __init__(self, path):
         self.resultPath = os.path.join(path, 'result')
@@ -58,5 +60,9 @@ class SaveFile:
                 shutil.copy(image, os.path.join(self.resultPath, self.style, self.issueFolder[i]))
 
     def load(self, image: str):
-        pass
+        lst = []
+        for key in list(self.issueFolder.keys()):
+            if os.path.basename(image) in os.listdir(os.path.join(self.resultPath, self.style, self.issueFolder[key])):
+                lst.append(key)
+        return ic(lst)
 

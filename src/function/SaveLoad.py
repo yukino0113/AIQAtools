@@ -55,9 +55,10 @@ class SaveLoad:
 
     def get_delete_list(self, style: str, issue: list, image: str):
         self.style = style
-        exist_list = ic([x for x in issue if ic(os.path.basename(image)) in
-                         ic(os.listdir(os.path.join(self.resultPath, self.style, self.issueFolder[x])))])
-        return ic([x for x in exist_list if x not in issue])
+        exist_list = [x for x in self.issueFolder.keys()
+                      if os.path.basename(image)
+                      in os.listdir(os.path.join(self.resultPath, self.style, self.issueFolder[x]))]
+        return [x for x in exist_list if x not in issue]
 
     def save(self, style: str, issue: list, image: str):
         self.style = style
@@ -67,10 +68,10 @@ class SaveLoad:
         for issue_item in issue:
             issue_path = os.path.join(self.resultPath, self.style, self.issueFolder[issue_item])
             if file_name not in os.listdir(issue_path):
-                ic(shutil.copy(image, issue_path))
+                shutil.copy(image, issue_path)
         for del_issue in self.get_delete_list(self.style, issue, image):
             del_path = os.path.join(self.resultPath, self.style, self.issueFolder[del_issue], file_name)
-            ic(os.remove(del_path))
+            os.remove(del_path)
 
     def load(self, image: str):
         issue_list = []

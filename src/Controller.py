@@ -149,17 +149,13 @@ class MainWindowController(QtWidgets.QMainWindow):
 
     def next_image(self):
 
-        issue = []
-
         current_style = self.genImage.currentStyle
         current_image = self.genImage.get_current_image_path()
 
-        for i in range(len(self.issueList)):
-            if self.issueList[i].isChecked():
-                issue.append(self.issueList[i].text())
+        issue = [x.text() for x in self.issueList if x.isChecked()]
 
         if delete_list := self.sl.get_delete_list(current_style, issue, current_image):
-            delete = QMessageBox.question(self, 'Message', f'是否刪除以下資料夾?\n{delete_list}',
+            delete = QMessageBox.question(self, 'Message', f'是否刪除以下資料夾?\n{", ".join(delete_list)}',
                                           QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if delete == QMessageBox.StandardButton.No:
                 return

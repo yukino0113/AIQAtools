@@ -9,13 +9,13 @@ class SaveLoad:
     def __init__(self, path):
         self.resultPath = os.path.join(path, 'result')
         self.style = None
-        self.init_create_result_folder()
+        self._check_and_create_result_folder()
 
         self.issueFolder = {
             '身形太壯、怪異肌肉': '1_(男)身形太壯怪異肌肉',
             '胸部過大不自然': '2_(女)胸部過大不自然',
             '胸部形狀位置怪異': '3_(女)胸部形狀位置怪異',
-            '頭髮沒切乾淨突出': '4_頭髮沒切乾淨突出',
+            '頭髮沒切乾淨突出': '4_(女)頭髮沒切乾淨突出',
             '臉切壞': '5_臉切壞',
             '膚色斷差': '6_膚色斷差',
             '手指': '7_手趾',
@@ -31,13 +31,21 @@ class SaveLoad:
             '正常': '正常'
         }
 
-    def init_create_result_folder(self):
+    def _check_and_create_result_folder(self):
         if not os.path.exists(self.resultPath):
             os.mkdir(self.resultPath)
 
-    def init_create_style_folder(self, style):
+    def _check_and_create_style_folder(self, style):
+        self._check_and_create_result_folder()
         if not os.path.exists(os.path.join(self.resultPath, style)):
             os.mkdir(os.path.join(self.resultPath, style))
+
+    def _check_and_create_issue_folder(self):
+        self._check_and_create_style_folder(self.style)
+        os.chdir(os.path.join(self.resultPath, self.style))
+        for name in self._get_issue_template():
+            if not os.path.exists(name):
+                os.mkdir(name)
 
     @staticmethod
     def _get_issue_template():
@@ -45,24 +53,28 @@ class SaveLoad:
                   'r', encoding='utf-8') as f:
             return f.read().split('\n')
 
-    def _create_from_template(self):
-        os.chdir(os.path.join(self.resultPath, self.style))
-        for name in self._get_issue_template():
-            if not os.path.exists(name):
-                os.mkdir(name)
+    def get_delete_list(self, style: str, issue: list, image: str):
+        self.style = style
+        exist_list = ic([x for x in issue if ic(os.path.basename(image)) in
+                         ic(os.listdir(os.path.join(self.resultPath, self.style, self.issueFolder[x])))])
+        return ic([x for x in exist_list if x not in issue])
 
     def save(self, style: str, issue: list, image: str):
         self.style = style
-        if not os.path.exists(os.path.join(self.resultPath, style)):
-            self._create_from_template()
-        for i in issue:
-            if os.path.basename(image) not in os.listdir(os.path.join(self.resultPath, self.style, self.issueFolder[i])):
-                shutil.copy(image, os.path.join(self.resultPath, self.style, self.issueFolder[i]))
+        self._check_and_create_issue_folder()
+        file_name = os.path.basename(image)
+
+        for issue_item in issue:
+            issue_path = os.path.join(self.resultPath, self.style, self.issueFolder[issue_item])
+            if file_name not in os.listdir(issue_path):
+                ic(shutil.copy(image, issue_path))
+        for del_issue in self.get_delete_list(self.style, issue, image):
+            del_path = os.path.join(self.resultPath, self.style, self.issueFolder[del_issue], file_name)
+            ic(os.remove(del_path))
 
     def load(self, image: str):
-        lst = []
+        issue_list = []
         for key in list(self.issueFolder.keys()):
             if os.path.basename(image) in os.listdir(os.path.join(self.resultPath, self.style, self.issueFolder[key])):
-                lst.append(key)
-        return lst
-
+                issue_list.append(key)
+        return issue_list

@@ -107,7 +107,7 @@ class MainWindowController(QtWidgets.QMainWindow):
 
         def set_black_bg(view):
             view.setBackgroundBrush(QColor(0, 0, 0))
-        
+
         if not self.genImage.imagePathDic:
             QMessageBox.critical(None, "Error", "The path doesn't have any style folder")
         else:
@@ -129,35 +129,53 @@ class MainWindowController(QtWidgets.QMainWindow):
             cb.setChecked(False)
 
     def previous_image(self):
-        if self.genImage.ImageOrder > 0:
-            self.genImage.previous()
-            self.sl.load(self.genImage.get_current_image_path())
-            self.load_image()
-        else:
-            QMessageBox.critical(None, "Error", "This is the first image")
+        if not self.genImage.ImageOrder > 0:
+            return QMessageBox.critical(None, "Error", "This is the first image")
 
-    def skip_image(self):
-        QtWidgets.QMessageBox.warning(self, "Warning", "尚未實作")
-        self.genImage.next()
-        # todo
-        #  will pop hint window?
-
+        self.genImage.previous()
+        issue_list = self.sl.load(self.genImage.get_current_image_path())
+        for CB in self.issueList:
+            if CB.text() in issue_list:
+                CB.setChecked(True)
         self.load_image()
 
+    def skip_image(self):
+        skip = QMessageBox.question(self, 'Message', f'請確認圖片是否沒有任何問題',
+                                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        if skip == QMessageBox.StandardButton.Yes:
+            self.genImage.next()
+            self.reset_cb()
+            self.load_image()
+
     def next_image(self):
-        # todo
-        #  if no CB, will pop window to tell user wil save to no issue folder.
 
         issue = []
+
+        current_style = self.genImage.currentStyle
+        current_image = self.genImage.get_current_image_path()
+
         for i in range(len(self.issueList)):
             if self.issueList[i].isChecked():
                 issue.append(self.issueList[i].text())
 
-        self.sl.save(self.genImage.currentStyle, issue, self.genImage.get_current_image_path())
+        if delete_list := self.sl.get_delete_list(current_style, issue, current_image):
+            delete = QMessageBox.question(self, 'Message', f'是否刪除以下資料夾?\n{delete_list}',
+                                          QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            if delete == QMessageBox.StandardButton.No:
+                return
 
-        self.reset_cb()
+        if not issue:
+            no_issue = QMessageBox.question(self, 'Message', f'請確認圖片是否沒有任何問題',
+                                            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            if no_issue == QMessageBox.StandardButton.Yes:
+                issue.append('正常')
+            else:
+                return
+
+        self.sl.save(current_style, issue, current_image)
 
         self.genImage.next()
+        self.reset_cb()
         self.load_image()
 
     def save_modify_image(self):

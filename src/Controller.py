@@ -73,43 +73,38 @@ class MainWindowController(QtWidgets.QMainWindow):
                 if view_height <= self.ui.generatedPic.height() and view_width <= self.ui.generatedPic.width():
                     break
                 ratio -= 0.05
-            view.setTransform(
-                QtGui.QTransform().scale(
-                    view_width / view.sceneRect().width(),
-                    view_height / view.sceneRect().height()))
+            view.setTransform(QtGui.QTransform().scale(
+                view_width / view.sceneRect().width(),
+                view_height / view.sceneRect().height()))
 
         def set_black_bg(view):
             view.setBackgroundBrush(QColor(0, 0, 0))
 
+        def set_image(view, path):
+            scene = set_scene(QtGui.QPixmap(path))
+            view.setScene(scene)
+            set_fit(view, scene)
+            set_black_bg(view)
+
         if not self.genImage.imagePathDic:
-            QMessageBox.critical(None, "Error", "The path doesn't have any style folder")
-        else:
-            self.gen_scene = set_scene(QtGui.QPixmap(self.genImage.get_current_image_path()))
-            self.ui.generatedPic.setScene(self.gen_scene)
-            set_fit(self.ui.generatedPic, self.gen_scene)
-            set_black_bg(self.ui.generatedPic)
+            return QMessageBox.critical(None, "Error", "The path doesn't have any style folder")
 
-            self.ui.fileNameLabel.setText(self.genImage.currentImage)
-
-            ref_scene = set_scene(f'{os.path.dirname(os.path.realpath(__file__))}\\..\\reference_image\\'
-                                  f'{"_".join(self.genImage.currentImage.split("_")[:2])}.jpg')
-            self.ui.referencePic.setScene(ref_scene)
-            set_fit(self.ui.referencePic, ref_scene)
-            set_black_bg(self.ui.referencePic)
+        self.ui.fileNameLabel.setText(self.genImage.currentImage)
+        set_image(self.ui.generatedPic, self.genImage.get_current_image_path())
+        set_image(self.ui.referencePic, f'{os.path.dirname(os.path.realpath(__file__))}\\..\\reference_image\\'
+                                        f'{"_".join(self.genImage.currentImage.split("_")[:2])}.jpg')
 
     def reset_cb(self):
-        for cb in self.issueList:
-            cb.setChecked(False)
+        [checkbox.setChecked(False) for checkbox in self.issueList]
 
     def previous_image(self):
         if not self.genImage.ImageOrder > 0:
+            # todo: change to disable button?
             return QMessageBox.critical(None, "Error", "This is the first image")
 
         self.genImage.previous()
         issue_list = self.sl.load(self.genImage.get_current_image_path())
-        for CB in self.issueList:
-            if CB.text() in issue_list:
-                CB.setChecked(True)
+        [checkbox.setChecked(True) for checkbox in self.issueList if checkbox.text() in issue_list]
         self.load_image()
 
     def skip_image(self):

@@ -28,17 +28,8 @@ class MainWindowController(QtWidgets.QMainWindow):
         self.ui.skipPic.clicked.connect(self.skip_image)
         self.ui.previousPic.clicked.connect(self.previous_image)
 
-        self.ui.nextPic.setEnabled(False)
-        self.ui.skipPic.setEnabled(False)
-        self.ui.previousPic.setEnabled(False)
-
-        self.drawing = False
-        self.start_point = None
-        self.end_point = None
-
-        self.ui.generatedPic.mousePressEvent = self.mousePressEvent
-        self.ui.generatedPic.mouseMoveEvent = self.mouseMoveEvent
-        self.ui.generatedPic.mouseReleaseEvent = self.mouseReleaseEvent
+        for i in [self.ui.nextPic, self.ui.skipPic, self.ui.previousPic]:
+            i.setEnabled(False)
 
     def import_path(self) -> None:
         folder_path = QFileDialog.getExistingDirectory(self, 'Select a folder')
@@ -63,9 +54,8 @@ class MainWindowController(QtWidgets.QMainWindow):
             except IndexError:
                 QMessageBox.critical(None, "Error", "路徑包含無圖片的 Style 資料夾，請再檢查一次")
 
-            self.ui.nextPic.setEnabled(True)
-            self.ui.skipPic.setEnabled(True)
-            self.ui.previousPic.setEnabled(True)
+            for i in [self.ui.nextPic, self.ui.skipPic, self.ui.previousPic]:
+                i.setEnabled(True)
 
     def load_image(self):
 

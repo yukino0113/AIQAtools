@@ -49,12 +49,13 @@ class SaveLoad:
 
     @staticmethod
     def _get_issue_template():
-        with open(f'{os.path.dirname(os.path.realpath(__file__))}\\..\\..\\issue_list.txt',
-                  'r', encoding='utf-8') as f:
+        with open(f'{os.path.dirname(os.path.realpath(__file__))}/../../issue_list.txt', 'r', encoding='utf-8') as f:
             return f.read().split('\n')
 
     def get_delete_list(self, style: str, issue: list, image: str):
         self.style = style
+        self._check_and_create_issue_folder()
+
         exist_list = [x for x in self.issueFolder.keys()
                       if os.path.basename(image)
                       in os.listdir(os.path.join(self.resultPath, self.style, self.issueFolder[x]))]
@@ -62,7 +63,6 @@ class SaveLoad:
 
     def save(self, style: str, issue: list, image: str):
         self.style = style
-        self._check_and_create_issue_folder()
         file_name = os.path.basename(image)
 
         for issue_item in issue:

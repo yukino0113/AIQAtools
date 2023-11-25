@@ -18,24 +18,7 @@ class MainWindowController(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.setup_control()
 
-        self.issueList = [
-            self.ui.musuleCB,
-            self.ui.bigBreastCB,
-            self.ui.BreastissueCB,
-            self.ui.hairCutCB,
-            self.ui.faceCB,
-            self.ui.skinCB,
-            self.ui.skinSave,
-            self.ui.fingerCB,
-            self.ui.ratioCB,
-            self.ui.bgCB,
-            self.ui.hairSyleCB,
-            self.ui.nakedCB,
-            self.ui.sexCB,
-            self.ui.clothCB,
-            self.ui.styleCB,
-            self.ui.boneCB,
-            self.ui.otherCB]
+        self.issueList = [getattr(self.ui, obj_name) for obj_name in dir(self.ui) if obj_name.endswith("CB")]
 
     def setup_control(self):
         self.ui.importOpenBtn.clicked.connect(self.import_path)
@@ -45,17 +28,8 @@ class MainWindowController(QtWidgets.QMainWindow):
         self.ui.skipPic.clicked.connect(self.skip_image)
         self.ui.previousPic.clicked.connect(self.previous_image)
 
-        self.ui.nextPic.setEnabled(False)
-        self.ui.skipPic.setEnabled(False)
-        self.ui.previousPic.setEnabled(False)
-
-        self.drawing = False
-        self.start_point = None
-        self.end_point = None
-
-        self.ui.generatedPic.mousePressEvent = self.mousePressEvent
-        self.ui.generatedPic.mouseMoveEvent = self.mouseMoveEvent
-        self.ui.generatedPic.mouseReleaseEvent = self.mouseReleaseEvent
+        for i in [self.ui.nextPic, self.ui.skipPic, self.ui.previousPic]:
+            i.setEnabled(False)
 
     def import_path(self) -> None:
         folder_path = QFileDialog.getExistingDirectory(self, 'Select a folder')
@@ -80,9 +54,8 @@ class MainWindowController(QtWidgets.QMainWindow):
             except IndexError:
                 QMessageBox.critical(None, "Error", "路徑包含無圖片的 Style 資料夾，請再檢查一次")
 
-            self.ui.nextPic.setEnabled(True)
-            self.ui.skipPic.setEnabled(True)
-            self.ui.previousPic.setEnabled(True)
+            for i in [self.ui.nextPic, self.ui.skipPic, self.ui.previousPic]:
+                i.setEnabled(True)
 
     def load_image(self):
 
@@ -100,43 +73,38 @@ class MainWindowController(QtWidgets.QMainWindow):
                 if view_height <= self.ui.generatedPic.height() and view_width <= self.ui.generatedPic.width():
                     break
                 ratio -= 0.05
-            view.setTransform(
-                QtGui.QTransform().scale(
-                    view_width / view.sceneRect().width(),
-                    view_height / view.sceneRect().height()))
+            view.setTransform(QtGui.QTransform().scale(
+                view_width / view.sceneRect().width(),
+                view_height / view.sceneRect().height()))
 
         def set_black_bg(view):
             view.setBackgroundBrush(QColor(0, 0, 0))
 
+        def set_image(view, path):
+            scene = set_scene(QtGui.QPixmap(path))
+            view.setScene(scene)
+            set_fit(view, scene)
+            set_black_bg(view)
+
         if not self.genImage.imagePathDic:
-            QMessageBox.critical(None, "Error", "The path doesn't have any style folder")
-        else:
-            self.gen_scene = set_scene(QtGui.QPixmap(self.genImage.get_current_image_path()))
-            self.ui.generatedPic.setScene(self.gen_scene)
-            set_fit(self.ui.generatedPic, self.gen_scene)
-            set_black_bg(self.ui.generatedPic)
+            return QMessageBox.critical(None, "Error", "The path doesn't have any style folder")
 
-            self.ui.fileNameLabel.setText(self.genImage.currentImage)
-
-            ref_scene = set_scene(f'{os.path.dirname(os.path.realpath(__file__))}\\..\\reference_image\\'
-                                  f'{"_".join(self.genImage.currentImage.split("_")[:2])}.jpg')
-            self.ui.referencePic.setScene(ref_scene)
-            set_fit(self.ui.referencePic, ref_scene)
-            set_black_bg(self.ui.referencePic)
+        self.ui.fileNameLabel.setText(self.genImage.currentImage)
+        set_image(self.ui.generatedPic, self.genImage.get_current_image_path())
+        set_image(self.ui.referencePic, f'{os.path.dirname(os.path.realpath(__file__))}\\..\\reference_image\\'
+                                        f'{"_".join(self.genImage.currentImage.split("_")[:2])}.jpg')
 
     def reset_cb(self):
-        for cb in self.issueList:
-            cb.setChecked(False)
+        [checkbox.setChecked(False) for checkbox in self.issueList]
 
     def previous_image(self):
         if not self.genImage.ImageOrder > 0:
+            # todo: change to disable button?
             return QMessageBox.critical(None, "Error", "This is the first image")
 
         self.genImage.previous()
         issue_list = self.sl.load(self.genImage.get_current_image_path())
-        for CB in self.issueList:
-            if CB.text() in issue_list:
-                CB.setChecked(True)
+        [checkbox.setChecked(True) for checkbox in self.issueList if checkbox.text() in issue_list]
         self.load_image()
 
     def skip_image(self):
@@ -152,13 +120,7 @@ class MainWindowController(QtWidgets.QMainWindow):
         current_style = self.genImage.currentStyle
         current_image = self.genImage.get_current_image_path()
 
-        issue = [x.text() for x in self.issueList if x.isChecked()]
-
-        if delete_list := self.sl.get_delete_list(current_style, issue, current_image):
-            delete = QMessageBox.question(self, 'Message', f'是否刪除以下資料夾?\n{", ".join(delete_list)}',
-                                          QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-            if delete == QMessageBox.StandardButton.No:
-                return
+        issue = [checkbox.text() for checkbox in self.issueList if checkbox.isChecked()]
 
         if not issue:
             no_issue = QMessageBox.question(self, 'Message', f'請確認圖片是否沒有任何問題',
@@ -166,6 +128,12 @@ class MainWindowController(QtWidgets.QMainWindow):
             if no_issue == QMessageBox.StandardButton.Yes:
                 issue.append('正常')
             else:
+                return
+
+        if delete_list := self.sl.get_delete_list(current_style, issue, current_image):
+            delete = QMessageBox.question(self, 'Message', f'是否沒有以下問題:\n{", ".join(delete_list)}',
+                                          QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            if delete == QMessageBox.StandardButton.No:
                 return
 
         self.sl.save(current_style, issue, current_image)

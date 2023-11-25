@@ -125,13 +125,7 @@ class MainWindowController(QtWidgets.QMainWindow):
         current_style = self.genImage.currentStyle
         current_image = self.genImage.get_current_image_path()
 
-        issue = [x.text() for x in self.issueList if x.isChecked()]
-
-        if delete_list := self.sl.get_delete_list(current_style, issue, current_image):
-            delete = QMessageBox.question(self, 'Message', f'是否刪除以下資料夾?\n{", ".join(delete_list)}',
-                                          QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-            if delete == QMessageBox.StandardButton.No:
-                return
+        issue = [checkbox.text() for checkbox in self.issueList if checkbox.isChecked()]
 
         if not issue:
             no_issue = QMessageBox.question(self, 'Message', f'請確認圖片是否沒有任何問題',
@@ -139,6 +133,12 @@ class MainWindowController(QtWidgets.QMainWindow):
             if no_issue == QMessageBox.StandardButton.Yes:
                 issue.append('正常')
             else:
+                return
+
+        if delete_list := self.sl.get_delete_list(current_style, issue, current_image):
+            delete = QMessageBox.question(self, 'Message', f'是否沒有以下問題:\n{", ".join(delete_list)}',
+                                          QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            if delete == QMessageBox.StandardButton.No:
                 return
 
         self.sl.save(current_style, issue, current_image)

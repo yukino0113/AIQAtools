@@ -18,24 +18,7 @@ class MainWindowController(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.setup_control()
 
-        self.issueList = [
-            self.ui.musuleCB,
-            self.ui.bigBreastCB,
-            self.ui.BreastissueCB,
-            self.ui.hairCutCB,
-            self.ui.faceCB,
-            self.ui.skinCB,
-            self.ui.skinSave,
-            self.ui.fingerCB,
-            self.ui.ratioCB,
-            self.ui.bgCB,
-            self.ui.hairSyleCB,
-            self.ui.nakedCB,
-            self.ui.sexCB,
-            self.ui.clothCB,
-            self.ui.styleCB,
-            self.ui.boneCB,
-            self.ui.otherCB]
+        self.issueList = [getattr(self.ui, obj_name) for obj_name in dir(self.ui) if obj_name.endswith("CB")]
 
     def setup_control(self):
         self.ui.importOpenBtn.clicked.connect(self.import_path)

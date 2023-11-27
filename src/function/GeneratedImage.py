@@ -10,6 +10,9 @@ class GeneratedImage:
         self.imagePathDic = self._get_path()
         self.ImageOrder = 0
 
+        self.currentStyle = None
+        self.currentImage = None
+
         self.clean_empty_path()
 
         if self.imagePathDic:
@@ -27,8 +30,10 @@ class GeneratedImage:
 
     def _get_path(self) -> dict:
         image_dict = {}
-        for styleFolder in [x for x in os.listdir(self.path)
-                            if (os.path.isdir(os.path.join(self.path, x)) and 'Design' in x)]:
+        style_folder_list = \
+            [x for x in os.listdir(self.path) if (os.path.isdir(os.path.join(self.path, x)) and 'Design' in x)]
+
+        for styleFolder in style_folder_list:
             image_dict[styleFolder] = {}
             for source_folder in styleFolder:
                 path = os.path.join(self.path, styleFolder)

@@ -37,15 +37,8 @@ class GeneratedImage:
                 image_path: [str, str, str, ...]
             }
         }
-
         :return: image_dict: dict
         """
-
-        def _clean_empty_style_folder(image_path_dict: dict) -> dict:
-            for style in image_path_dict.keys():
-                if image_path_dict[style]['quantity'] == 0:
-                    image_path_dict.pop(style)
-            return image_path_dict
 
         image_dict = {}
 
@@ -71,9 +64,10 @@ class GeneratedImage:
                     for file in os.listdir(os.path.join(style_path, folder)):
                         image_dict[styleFolder]['image_path'].append(os.path.join(style_path, folder, file))
 
-            image_dict[styleFolder]['quantity'] = len(list(image_dict[styleFolder]['image_path'].keys()))
+            if quantity := len(list(image_dict[styleFolder]['image_path'].keys())):
+                image_dict[styleFolder]['quantity'] = quantity
 
-        return ic(_clean_empty_style_folder(image_dict))
+        return image_dict
 
     def next(self):
         if self.ImageOrder < self.imageMaxCount - 1:

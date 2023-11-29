@@ -8,18 +8,15 @@ class GeneratedImage:
         self.path = path
         self.imagePathDic = self._get_path()
 
-        self.currentStyle = None
-        self.currentImage = None
+        self.currentImageIndex = 0
+        self.currentStyleIndex = 0
 
         if self.imagePathDic:
-            # self._refresh_current_style_and_image()
-            pass
-
+            self._refresh_current_style_and_image()
 
     def _refresh_current_style_and_image(self):
-        # todo: need to change logic for image order
-        self.currentStyle = list(self.imagePathDic.keys())[self.ImageOrder // 80]
-        self.currentImage = list(self.imagePathDic[self.currentStyle].keys())[self.ImageOrder % 80]
+        self.currentStyle = list(self.imagePathDic.keys())[self.currentStyleIndex]
+        self.currentImage = list(self.imagePathDic[self.currentStyle].keys())[self.currentImageIndex]
 
     def _get_path(self) -> dict:
         """
@@ -33,7 +30,6 @@ class GeneratedImage:
         styleImageDict Structure:
         {
             style: {
-                quantity: int,
                 image_path: [str, str, str, ...]
             }
         }
@@ -64,26 +60,27 @@ class GeneratedImage:
                     for file in os.listdir(os.path.join(style_path, folder)):
                         image_dict[styleFolder]['image_path'].append(os.path.join(style_path, folder, file))
 
-            if quantity := len(list(image_dict[styleFolder]['image_path'].keys())):
-                image_dict[styleFolder]['quantity'] = quantity
+            if len(image_dict[styleFolder]['image_path']) == 0:
+                del image_dict[styleFolder]
 
         return image_dict
 
     def next(self):
-        if self.ImageOrder < self.imageMaxCount - 1:
-            self.ImageOrder += 1
+        if self.currentImageIndex < self.imagePathDic[self.currentStyle]['quantity'] - 1:
+            self.currentImageIndex += 1
             self._refresh_current_style_and_image()
         else:
-            # todo: error handling
-            pass
+            self.currentStyleIndex += 1
+            self.currentImageIndex = 0
 
     def previous(self):
-        if self.ImageOrder > 0:
-            self.ImageOrder -= 1
-            self._refresh_current_style_and_image()
+        if self.currentImageIndex > 0:
+            self.currentImageIndex -= 1
         else:
-            # todo: error handling
-            pass
+            if self.currentStyleIndex > 0:
+                self.currentStyleIndex -= 1
+                self.currentImageIndex = self.imagePathDic[self.currentStyle]['quantity'] - 1
+        self._refresh_current_style_and_image()
 
     def get_current_image_path(self) -> str:
         return self.imagePathDic[self.currentStyle][self.currentImage]

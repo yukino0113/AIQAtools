@@ -67,12 +67,15 @@ class MainWindowController(QtWidgets.QMainWindow):
         def set_fit(view, scene):
             aspect_ratio = scene.sceneRect().height() / scene.sceneRect().width()
             ratio = 1
-            while ratio:
+
+            view_width = view.viewport().width() * ratio
+            view_height = aspect_ratio * view_width
+
+            while view_height > self.ui.generatedPic.height() and view_width > self.ui.generatedPic.width():
+                ratio -= 0.05
                 view_width = view.viewport().width() * ratio
                 view_height = aspect_ratio * view_width
-                if view_height <= self.ui.generatedPic.height() and view_width <= self.ui.generatedPic.width():
-                    break
-                ratio -= 0.05
+
             view.setTransform(QtGui.QTransform().scale(
                 view_width / view.sceneRect().width(),
                 view_height / view.sceneRect().height()))

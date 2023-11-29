@@ -52,7 +52,7 @@ class MainWindowController(QtWidgets.QMainWindow):
             except FileNotFoundError:
                 QMessageBox.critical(None, "Error", "路徑錯誤，請再檢查一次")
             except IndexError:
-                QMessageBox.critical(None, "Error", "路徑包含無圖片的 Style 資料夾，請再檢查一次")
+                QMessageBox.critical(None, "Error", "路徑為不包含圖片的 Style 資料夾，請再檢查一次")
 
             for i in [self.ui.nextPic, self.ui.skipPic, self.ui.previousPic]:
                 i.setEnabled(True)

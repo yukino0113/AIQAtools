@@ -89,16 +89,20 @@ class MainWindowController(QtWidgets.QMainWindow):
         if not self.genImage.imagePathDic:
             return QMessageBox.critical(None, "Error", "The path doesn't have any style folder")
 
-        self.ui.fileNameLabel.setText(self.genImage.currentImage)
+        self.ui.fileNameLabel.setText(os.path.basename(self.genImage.currentImage).split('.')[0])
+
+        # this label ui has not been make
+        # self.ui.referenceLabel.setText('_'.join(os.path.basename(self.genImage.currentImage).split("_")[:2]))
+
         set_image(self.ui.generatedPic, self.genImage.get_current_image_path())
-        set_image(self.ui.referencePic, f'{os.path.dirname(os.path.realpath(__file__))}\\..\\reference_image\\'
-                                        f'{"_".join(self.genImage.currentImage.split("_")[:2])}.jpg')
+        set_image(self.ui.referencePic, f'{os.path.dirname(os.path.realpath(__file__))}/../reference_image/'
+                                        f'{"_".join(os.path.basename(self.genImage.currentImage).split("_")[:2])}.jpg')
 
     def reset_cb(self):
         [checkbox.setChecked(False) for checkbox in self.issueList]
 
     def previous_image(self):
-        if not self.genImage.ImageOrder > 0:
+        if not self.genImage.currentImageIndex > 0:
             # todo: change to disable button?
             return QMessageBox.critical(None, "Error", "This is the first image")
 

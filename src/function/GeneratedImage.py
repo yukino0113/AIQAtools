@@ -16,7 +16,7 @@ class GeneratedImage:
 
     def _refresh_current_style_and_image(self):
         self.currentStyle = list(self.imagePathDic.keys())[self.currentStyleIndex]
-        self.currentImage = list(self.imagePathDic[self.currentStyle].keys())[self.currentImageIndex]
+        self.currentImage = self.imagePathDic[self.currentStyle][self.currentImageIndex]
 
     def _get_path(self) -> dict:
         """
@@ -44,7 +44,7 @@ class GeneratedImage:
              if (os.path.isdir(os.path.join(self.path, styleFolderName)) and 'Design' in styleFolderName)]
 
         for styleFolder in style_folder_list:
-            image_dict[styleFolder] = {}
+            image_dict[styleFolder] = []
 
             for source_folder in styleFolder:
                 style_path = os.path.join(self.path, styleFolder)
@@ -55,18 +55,16 @@ class GeneratedImage:
                     # todo: need this?
                     os.chdir(os.path.join(style_path, folder))
 
-                    image_dict[styleFolder]['image_path'] = []
-
                     for file in os.listdir(os.path.join(style_path, folder)):
-                        image_dict[styleFolder]['image_path'].append(os.path.join(style_path, folder, file))
+                        image_dict[styleFolder].append(os.path.join(style_path, folder, file))
 
-            if len(image_dict[styleFolder]['image_path']) == 0:
+            if len(image_dict[styleFolder]) == 0:
                 del image_dict[styleFolder]
 
         return image_dict
 
     def next(self):
-        if self.currentImageIndex < self.imagePathDic[self.currentStyle]['quantity'] - 1:
+        if self.currentImageIndex < len(self.imagePathDic[self.currentStyle]) - 1:
             self.currentImageIndex += 1
             self._refresh_current_style_and_image()
         else:
@@ -79,8 +77,8 @@ class GeneratedImage:
         else:
             if self.currentStyleIndex > 0:
                 self.currentStyleIndex -= 1
-                self.currentImageIndex = self.imagePathDic[self.currentStyle]['quantity'] - 1
+                self.currentImageIndex = len(self.imagePathDic[self.currentStyle]) - 1
         self._refresh_current_style_and_image()
 
     def get_current_image_path(self) -> str:
-        return self.imagePathDic[self.currentStyle][self.currentImage]
+        return self.imagePathDic[self.currentStyle][self.currentImageIndex]

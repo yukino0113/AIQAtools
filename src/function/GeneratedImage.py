@@ -4,6 +4,7 @@ from icecream import ic
 
 
 class GeneratedImage:
+
     def __init__(self, path):
         self.path = path
         self.imagePathDic = self._get_path()

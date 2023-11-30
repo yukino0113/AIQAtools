@@ -3,11 +3,13 @@ import os
 from PyQt6 import QtWidgets, QtGui
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import QFileDialog, QMessageBox
+from PIL import Image, ExifTags
 from icecream import ic
 
 from src.UI.Ui_Dialog import Ui_Dialog
 from src.function.GeneratedImage import GeneratedImage
 from src.function.SaveLoad import SaveLoad
+
 
 
 class MainWindowController(QtWidgets.QMainWindow):
@@ -30,6 +32,9 @@ class MainWindowController(QtWidgets.QMainWindow):
 
         for i in [self.ui.nextPic, self.ui.skipPic, self.ui.previousPic]:
             i.setEnabled(False)
+
+        self.ui.importPath.setText('C:/Users/jethro_wang/Desktop/Test')
+        self.ui.loadPath.click()
 
     def import_path(self) -> None:
         folder_path = QFileDialog.getExistingDirectory(self, 'Select a folder')
@@ -61,7 +66,7 @@ class MainWindowController(QtWidgets.QMainWindow):
 
         def set_scene(path):
             scene = QtWidgets.QGraphicsScene()
-            scene.addPixmap(QtGui.QPixmap(path))
+            scene.addPixmap(path)
             return scene
 
         def set_fit(view, scene):
@@ -73,8 +78,8 @@ class MainWindowController(QtWidgets.QMainWindow):
 
             while view_height > self.ui.generatedPic.height() or view_width > self.ui.generatedPic.width():
                 ratio -= 0.05
-                view_width = ic(view.viewport().width() * ratio)
-                view_height = ic(aspect_ratio * view_width)
+                view_width = view.viewport().width() * ratio
+                view_height = aspect_ratio * view_width
 
             view.setTransform(QtGui.QTransform().scale(
                 view_width / view.sceneRect().width(),
@@ -89,6 +94,29 @@ class MainWindowController(QtWidgets.QMainWindow):
             set_fit(view, scene)
             set_black_bg(view)
 
+        def reorient_img(path):
+            try:
+                image = Image.open(path)
+                for orientation in ExifTags.TAGS.keys():
+                    if ExifTags.TAGS[orientation] == 'Orientation':
+                        break
+                exif = dict(image._getexif().items())
+
+                if exif[orientation] == 3:
+                    image = image.transpose(Image.ROTATE_180)
+                elif exif[orientation] == 6:
+                    image = image.transpose(Image.ROTATE_270)
+                elif exif[orientation] == 8:
+                    image = image.transpose(Image.ROTATE_90)
+                image.save(path)
+                image.close()
+
+            except (AttributeError, KeyError, IndexError):
+                # cases: image don't have getexif
+                pass
+
+            return path
+
         if not self.genImage.imagePathDic:
             return QMessageBox.critical(None, "Error", "The path doesn't have any style folder")
 
@@ -97,9 +125,12 @@ class MainWindowController(QtWidgets.QMainWindow):
         # this label ui has not been make
         # self.ui.referenceLabel.setText('_'.join(os.path.basename(self.genImage.currentImage).split("_")[:2]))
 
-        set_image(self.ui.generatedPic, self.genImage.get_current_image_path())
-        set_image(self.ui.referencePic, f'{os.path.dirname(os.path.realpath(__file__))}/../reference_image/'
-                                        f'{"_".join(os.path.basename(self.genImage.currentImage).split("_")[:2])}.jpg')
+        gen_path = self.ui.generatedPic, self.genImage.get_current_image_path()
+        ref_path = (f'{os.path.dirname(os.path.realpath(__file__))}/../reference_image/'
+                    f'{"_".join(os.path.basename(self.genImage.currentImage).split("_")[:2])}.jpg')
+
+        set_image(self.ui.generatedPic, gen_path)
+        set_image(self.ui.referencePic, reorient_img(ref_path))
 
     def reset_cb(self):
         [checkbox.setChecked(False) for checkbox in self.issueList]

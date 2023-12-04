@@ -47,17 +47,15 @@ class GeneratedImage:
         for styleFolder in style_folder_list:
             image_dict[styleFolder] = []
 
-            for source_folder in styleFolder:
-                style_path = os.path.join(self.path, styleFolder)
-                # Get all the folder in the style folder
-                source_folder = [x for x in os.listdir(style_path) if os.path.isdir(os.path.join(style_path, x))]
+            style_folder_path = os.path.join(self.path, styleFolder)
+            source_folder_list = [x for x in os.listdir(style_folder_path) if os.path.isdir(os.path.join(style_folder_path, x))]
 
-                for folder in source_folder:
-                    # todo: need this?
-                    os.chdir(os.path.join(style_path, folder))
+            for source_folder in source_folder_list:
+                source_folder_path = os.path.join(style_folder_path, source_folder)
 
-                    for file in os.listdir(os.path.join(style_path, folder)):
-                        image_dict[styleFolder].append(os.path.join(style_path, folder, file))
+                for file in os.listdir(source_folder_path):
+                    if file.endswith('.png') or file.endswith('.jpg'):
+                        image_dict[styleFolder].append(os.path.join(source_folder_path, file))
 
             if len(image_dict[styleFolder]) == 0:
                 del image_dict[styleFolder]

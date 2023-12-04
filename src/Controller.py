@@ -11,7 +11,6 @@ from src.function.GeneratedImage import GeneratedImage
 from src.function.SaveLoad import SaveLoad
 
 
-
 class MainWindowController(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -146,12 +145,16 @@ class MainWindowController(QtWidgets.QMainWindow):
         self.load_image()
 
     def skip_image(self):
-        skip = QMessageBox.question(self, 'Message', f'請確認圖片是否沒有任何問題',
+        skip = QMessageBox.question(self, 'Message', f'是否要跳過本張圖片',
                                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if skip == QMessageBox.StandardButton.Yes:
             self.genImage.next()
             self.reset_cb()
             self.load_image()
+
+        if self.genImage.currentStyleIndex == len(self.genImage.imagePathDic) - 1 and \
+                self.genImage.currentImageIndex == len(self.genImage.imagePathDic[self.genImage.currentStyle]) - 1:
+            self.ui.skipPic.setEnabled(False)
 
     def next_image(self):
 
@@ -176,9 +179,13 @@ class MainWindowController(QtWidgets.QMainWindow):
 
         self.sl.save(current_style, issue, current_image)
 
-        self.genImage.next()
-        self.reset_cb()
-        self.load_image()
+        if not self.genImage.currentStyleIndex == len(self.genImage.imagePathDic) - 1 and \
+                self.genImage.currentImageIndex == len(self.genImage.imagePathDic[self.genImage.currentStyle]) - 1:
+            self.genImage.next()
+            self.reset_cb()
+            self.load_image()
+        else:
+            QMessageBox.information(None, "Error", "測試結束")
 
     def save_modify_image(self):
         pass

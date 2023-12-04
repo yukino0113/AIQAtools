@@ -179,13 +179,17 @@ class MainWindowController(QtWidgets.QMainWindow):
 
         self.sl.save(current_style, issue, current_image)
 
-        if not self.genImage.currentStyleIndex == len(self.genImage.imagePathDic) - 1 and \
-                self.genImage.currentImageIndex == len(self.genImage.imagePathDic[self.genImage.currentStyle]) - 1:
+        if not (self.genImage.currentStyleIndex == len(self.genImage.imagePathDic) - 1 and
+                self.genImage.currentImageIndex == len(self.genImage.imagePathDic[self.genImage.currentStyle]) - 1):
             self.genImage.next()
             self.reset_cb()
             self.load_image()
         else:
             QMessageBox.information(None, "Error", "測試結束")
+            quit_window = QMessageBox.question(self, 'Message', f'是否要離開本程式',
+                                               QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            if quit_window == QMessageBox.StandardButton.Yes:
+                sys.exit()
 
     def save_modify_image(self):
         pass

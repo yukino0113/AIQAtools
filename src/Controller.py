@@ -124,7 +124,7 @@ class MainWindowController(QtWidgets.QMainWindow):
         # this label ui has not been make
         # self.ui.referenceLabel.setText('_'.join(os.path.basename(self.genImage.currentImage).split("_")[:2]))
 
-        gen_path = self.ui.generatedPic, self.genImage.get_current_image_path()
+        gen_path = self.genImage.get_current_image_path()
         ref_path = (f'{os.path.dirname(os.path.realpath(__file__))}/../reference_image/'
                     f'{"_".join(os.path.basename(self.genImage.currentImage).split("_")[:2])}.jpg')
 

@@ -46,6 +46,8 @@ class SaveLoad:
         for name in self._get_issue_template():
             if not os.path.exists(name):
                 os.mkdir(name)
+                if name != '正常':
+                    open(os.path.join(name, f'{os.path.join(self.resultPath, self.style, name)}\對應圖片的問題描述.txt'), 'w', encoding='utf-8').close()
 
     @staticmethod
     def _get_issue_template():

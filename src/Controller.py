@@ -1,4 +1,5 @@
 import os
+import sys
 
 from PyQt6 import QtWidgets, QtGui
 from PyQt6.QtGui import QColor
@@ -32,16 +33,13 @@ class MainWindowController(QtWidgets.QMainWindow):
         for i in [self.ui.nextPic, self.ui.skipPic, self.ui.previousPic]:
             i.setEnabled(False)
 
-        self.ui.importPath.setText('C:/Users/jethro_wang/Desktop/Test')
-        self.ui.loadPath.click()
-
     def import_path(self) -> None:
-        folder_path = QFileDialog.getExistingDirectory(self, 'Select a folder')
+        folder_path = QFileDialog.getExistingDirectory(self, '請選擇輸入路徑')
         if folder_path:
             self.ui.importPath.setText(folder_path)
 
     def export_path(self) -> None:
-        folder_path = QFileDialog.getExistingDirectory(self, 'Select a folder')
+        folder_path = QFileDialog.getExistingDirectory(self, '請選擇輸入路徑')
         if folder_path:
             self.ui.exportPath.setText(folder_path)
 
@@ -117,7 +115,7 @@ class MainWindowController(QtWidgets.QMainWindow):
             return path
 
         if not self.genImage.imagePathDic:
-            return QMessageBox.critical(None, "Error", "The path doesn't have any style folder")
+            return QMessageBox.critical(None, "Error", "路徑沒有 Style 資料夾")
 
         self.ui.fileNameLabel.setText(os.path.basename(self.genImage.currentImage).split('.')[0])
 
@@ -137,7 +135,7 @@ class MainWindowController(QtWidgets.QMainWindow):
     def previous_image(self):
         if not self.genImage.currentImageIndex > 0:
             # todo: change to disable button?
-            return QMessageBox.critical(None, "Error", "This is the first image")
+            return QMessageBox.critical(None, "Error", "目前已經是第一張")
 
         self.genImage.previous()
         issue_list = self.sl.load(self.genImage.get_current_image_path())
@@ -145,16 +143,18 @@ class MainWindowController(QtWidgets.QMainWindow):
         self.load_image()
 
     def skip_image(self):
+
+        if (self.genImage.currentStyleIndex == len(self.genImage.imagePathDic) - 1 and
+                self.genImage.currentImageIndex == len(self.genImage.imagePathDic[self.genImage.currentStyle]) - 1):
+            QMessageBox.information(None, "Error", "已經是最後一張圖了")
+            return
+
         skip = QMessageBox.question(self, 'Message', f'是否要跳過本張圖片',
                                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if skip == QMessageBox.StandardButton.Yes:
             self.genImage.next()
             self.reset_cb()
             self.load_image()
-
-        if self.genImage.currentStyleIndex == len(self.genImage.imagePathDic) - 1 and \
-                self.genImage.currentImageIndex == len(self.genImage.imagePathDic[self.genImage.currentStyle]) - 1:
-            self.ui.skipPic.setEnabled(False)
 
     def next_image(self):
 

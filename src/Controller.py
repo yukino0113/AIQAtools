@@ -113,15 +113,15 @@ class MainWindowController(QtWidgets.QMainWindow):
 
             return path
 
-        if not self.genImage.imagePathDic:
-            return QMessageBox.critical(None, "Error", "路徑沒有 Style 資料夾")
+        if not self.genImage.imagePathList:
+            return QMessageBox.critical(None, "Error", "路徑沒有任何圖片")
 
         self.ui.fileNameLabel.setText(os.path.basename(self.genImage.currentImage).split('.')[0])
 
         # this label ui has not been make
         # self.ui.referenceLabel.setText('_'.join(os.path.basename(self.genImage.currentImage).split("_")[:2]))
 
-        gen_path = self.genImage.get_current_image_path()
+        gen_path = self.genImage.currentImage
         ref_path = (f'{os.path.dirname(os.path.realpath(__file__))}/../reference_image/'
                     f'{"_".join(os.path.basename(self.genImage.currentImage).split("_")[:2])}.jpg')
 
@@ -137,14 +137,14 @@ class MainWindowController(QtWidgets.QMainWindow):
             return QMessageBox.critical(None, "Error", "目前已經是第一張")
 
         self.genImage.previous()
-        issue_list = self.sl.load(self.genImage.get_current_image_path())
+        issue_list = self.sl.load(self.genImage.currentImage)
         [checkbox.setChecked(True) for checkbox in self.issueList if checkbox.text() in issue_list]
         self.load_image()
 
     def next_image(self):
 
         current_style = self.genImage.currentStyle
-        current_image = self.genImage.get_current_image_path()
+        current_image = self.genImage.currentImage
 
         issue = [checkbox.text() for checkbox in self.issueList if checkbox.isChecked()]
 
@@ -164,8 +164,8 @@ class MainWindowController(QtWidgets.QMainWindow):
 
         self.sl.save(current_style, issue, current_image)
 
-        if not (self.genImage.currentStyleIndex == len(self.genImage.imagePathDic) - 1 and
-                self.genImage.currentImageIndex == len(self.genImage.imagePathDic[self.genImage.currentStyle]) - 1):
+        if not (self.genImage.currentStyleIndex == len(self.genImage.imagePathList) - 1 and
+                self.genImage.currentImageIndex == len(self.genImage.imagePathList[self.genImage.currentStyle]) - 1):
             self.genImage.next()
             self.reset_cb()
             self.load_image()

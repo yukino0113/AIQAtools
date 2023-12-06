@@ -9,6 +9,7 @@ from icecream import ic
 
 from src.UI.Ui_Dialog import Ui_Dialog
 from src.function.GeneratedImage import GeneratedImage
+from src.function.ReferenceImage import ReferenceImage
 from src.function.SaveLoad import SaveLoad
 
 
@@ -16,6 +17,8 @@ class MainWindowController(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.genImage = None
+        self.refImage = None
+        self.sl = None
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.setup_control()
@@ -43,11 +46,12 @@ class MainWindowController(QtWidgets.QMainWindow):
             self.ui.exportPath.setText(folder_path)
 
     def load_path(self) -> None:
-        if not self.ui.importPath.text():
-            QMessageBox.critical(None, "Error", "請先指定輸入路徑")
+        if not self.ui.importPath.text() or not self.ui.exportPath.text():
+            QMessageBox.critical(None, "Error", "請先指定輸入/參考圖路徑")
         else:
             try:
                 self.genImage = GeneratedImage(self.ui.importPath.text())
+                self.refImage = ReferenceImage(self.ui.exportPath.text())
                 self.load_image()
                 self.sl = SaveLoad(self.ui.importPath.text())
             except FileNotFoundError:
@@ -122,8 +126,9 @@ class MainWindowController(QtWidgets.QMainWindow):
         # self.ui.referenceLabel.setText('_'.join(os.path.basename(self.genImage.currentImage).split("_")[:2]))
 
         gen_path = self.genImage.currentImage
-        ref_path = (f'{os.path.dirname(os.path.realpath(__file__))}/../reference_image/'
-                    f'{"_".join(os.path.basename(self.genImage.currentImage).split("_")[:2])}.jpg')
+        # todo: check base name
+        ref_path = ic(f'{self.refImage.imagePathList["_".join(os.path.basename(self.genImage.currentImage).split("_")[:2])]}')
+        ic(ref_path)
 
         set_image(self.ui.generatedPic, gen_path)
         set_image(self.ui.referencePic, reorient_img(ref_path))

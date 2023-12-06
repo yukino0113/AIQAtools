@@ -48,6 +48,7 @@ class SaveLoad:
                 os.mkdir(name)
                 if name != '正常':
                     open(os.path.join(name, f'{os.path.join(self.resultPath, self.style, name)}\對應圖片的問題描述.txt'), 'w', encoding='utf-8').close()
+        os.mkdir('已完成照片備存')
 
     @staticmethod
     def _get_issue_template():
@@ -74,6 +75,8 @@ class SaveLoad:
         for del_issue in self.get_delete_list(self.style, issue, image):
             del_path = os.path.join(self.resultPath, self.style, self.issueFolder[del_issue], file_name)
             os.remove(del_path)
+
+        shutil.copy(image, os.path.join(self.resultPath, self.style, '已完成照片備存'))
 
     def load(self, image: str):
         issue_list = []

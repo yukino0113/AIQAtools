@@ -27,7 +27,6 @@ class MainWindowController(QtWidgets.QMainWindow):
         self.ui.exportOpenBtn.clicked.connect(self.export_path)
         self.ui.loadPath.clicked.connect(self.load_path)
         self.ui.nextPic.clicked.connect(self.next_image)
-        self.ui.skipPic.clicked.connect(self.skip_image)
         self.ui.previousPic.clicked.connect(self.previous_image)
 
         for i in [self.ui.nextPic, self.ui.skipPic, self.ui.previousPic]:
@@ -141,20 +140,6 @@ class MainWindowController(QtWidgets.QMainWindow):
         issue_list = self.sl.load(self.genImage.get_current_image_path())
         [checkbox.setChecked(True) for checkbox in self.issueList if checkbox.text() in issue_list]
         self.load_image()
-
-    def skip_image(self):
-
-        if (self.genImage.currentStyleIndex == len(self.genImage.imagePathDic) - 1 and
-                self.genImage.currentImageIndex == len(self.genImage.imagePathDic[self.genImage.currentStyle]) - 1):
-            QMessageBox.information(None, "Error", "已經是最後一張圖了")
-            return
-
-        skip = QMessageBox.question(self, 'Message', f'是否要跳過本張圖片',
-                                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-        if skip == QMessageBox.StandardButton.Yes:
-            self.genImage.next()
-            self.reset_cb()
-            self.load_image()
 
     def next_image(self):
 

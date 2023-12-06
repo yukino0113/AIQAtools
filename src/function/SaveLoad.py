@@ -7,7 +7,7 @@ from icecream import ic
 class SaveLoad:
 
     def __init__(self, path):
-        self.resultPath = os.path.join(path, 'result')
+        self.resultPath = os.path.join(os.path.dirname(path), 'result')
         self.style = None
         self._check_and_create_result_folder()
 

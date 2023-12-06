@@ -17,18 +17,11 @@ class GeneratedImage:
     def _get_path(self) -> list:
         """
         Source folder structure:
-
         - Style folder (self.path)
         -- Source folder
         --- Image file
 
-        styleImageDict Structure:
-        {
-            style: {
-                image_path: [str, str, str, ...]
-            }
-        }
-        :return: image_dict: dict
+        styleImageList Structure: [str, str, str, ...]
         """
 
         image_lst = []
@@ -47,7 +40,7 @@ class GeneratedImage:
                 if file.endswith('.png') or file.endswith('.jpg'):
                     image_lst.append(os.path.join(source_folder_path, file))
 
-        return ic(image_lst)
+        return image_lst
 
     def next(self):
         if self.currentImageIndex < len(self.imagePathList) - 1:

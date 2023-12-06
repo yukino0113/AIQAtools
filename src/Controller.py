@@ -174,7 +174,5 @@ class MainWindowController(QtWidgets.QMainWindow):
             quit_window = QMessageBox.question(self, 'Message', f'是否要離開本程式',
                                                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if quit_window == QMessageBox.StandardButton.Yes:
+                os.startfile(os.path.join(self.ui.importPath.text(), 'result'))
                 sys.exit()
-
-    def save_modify_image(self):
-        pass

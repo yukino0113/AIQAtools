@@ -115,6 +115,7 @@ class Ui_Dialog(object):
         self.previousPic = QtWidgets.QPushButton(parent=Dialog)
         self.previousPic.setGeometry(QtCore.QRect(830, 540, 75, 24))
         self.previousPic.setObjectName("previousPic")
+
         self.importPath.raise_()
         self.layoutWidget.raise_()
         self.exportLabel.raise_()
@@ -129,7 +130,6 @@ class Ui_Dialog(object):
         self.generatedPic.raise_()
         self.fileNameLabel.raise_()
         self.resetBtn.raise_()
-        self.skipPic.raise_()
         self.nextPic.raise_()
         self.previousPic.raise_()
 
@@ -148,8 +148,8 @@ class Ui_Dialog(object):
         self.generatedLabel.setText(_translate("Dialog", "Generated image:"))
         self.fileNameLabel.setText(_translate("Dialog", "FileName"))
         self.resetBtn.setText(_translate("Dialog", "Reset"))
-        self.skipPic.setText(_translate("Dialog", "Skip"))
         self.nextPic.setText(_translate("Dialog", "Next"))
+        self.previousPic.setText(_translate("Dialog", "Previous"))
         self.musuleCB.setText(_translate("Dialog", "人物被改變"))
         self.bigBreastCB.setText(_translate("Dialog", "風格不符"))
         self.BreastissueCB.setText(_translate("Dialog", "光影不符"))

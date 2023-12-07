@@ -11,7 +11,7 @@ class GeneratedImage:
 
         self.currentImageIndex = 0
 
-        self.currentStyle = None
+        self.currentStyle = path.split('\\')[-1]
         self.currentImage = self.imagePathList[self.currentImageIndex]
 
     def _get_path(self) -> list:

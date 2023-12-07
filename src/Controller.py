@@ -169,8 +169,7 @@ class MainWindowController(QtWidgets.QMainWindow):
 
         self.sl.save(current_style, issue, current_image)
 
-        if not (self.genImage.currentStyleIndex == len(self.genImage.imagePathList) - 1 and
-                self.genImage.currentImageIndex == len(self.genImage.imagePathList[self.genImage.currentStyle]) - 1):
+        if not self.genImage.currentImageIndex == len(self.genImage.imagePathList) - 1:
             self.genImage.next()
             self.reset_cb()
             self.load_image()

@@ -16,4 +16,4 @@ class ReferenceImage:
             if file.endswith('.png') or file.endswith('.jpg'):
                 image[os.path.basename(file).split('.')[0]] = os.path.join(path, file)
 
-        return ic(image)
+        return image

@@ -33,11 +33,11 @@ class SaveLoad:
         self._check_and_create_style_folder(self.style)
         os.chdir(os.path.join(self.resultPath, self.style))
         for name in self.issue.keys():
-            if not os.path.exists(os.path.join(self.resultPath, self.style, name)):
-                os.mkdir(name)
+            if not os.path.exists(os.path.join(self.resultPath, self.style, self.issue[name])):
+                os.mkdir(self.issue[name])
                 if name not in ['正常', '已完成照片備存']:
                     open(
-                        os.path.join(name, f'{os.path.join(self.resultPath, self.style, name)}/對應圖片的問題描述.txt'),
+                        os.path.join(name, f'{os.path.join(self.resultPath, self.style, self.issue[name])}/對應圖片的問題描述.txt'),
                         'w', encoding='utf-8').close()
 
     @staticmethod

@@ -3,25 +3,25 @@ import sys
 
 from PyQt6 import QtWidgets, QtGui
 from PyQt6.QtGui import QColor
-from PyQt6.QtWidgets import QFileDialog, QMessageBox
+from PyQt6.QtWidgets import QFileDialog, QMessageBox, QDialog
 from PIL import Image, ExifTags
 from icecream import ic
 
-from src.UI.Ui_Dialog import Ui_Dialog
+from src.UI.Ui_Dialog import Ui_Window
 from src.function.GeneratedImage import GeneratedImage
 from src.function.ReferenceImage import ReferenceImage
 from src.function.SaveLoad import SaveLoad
 
 
-class MainWindowController(QtWidgets.QMainWindow):
+class MainWindowController(QDialog, Ui_Window):
     def __init__(self):
         super().__init__()
         self.genImage = None
         self.refImage = None
         self.sl = None
-        self.ui = Ui_Dialog()
+        self.ui = Ui_Window()
         self.ui.setupUi(self)
-        self.setup_control()
+        #self.setup_control()
 
         self.issueList = [getattr(self.ui, obj_name) for obj_name in dir(self.ui) if obj_name.endswith("CB")]
 

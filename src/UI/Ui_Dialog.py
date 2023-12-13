@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_Window(object):
     def setupUi(self, Window):
         Window.setObjectName("Window")
-        Window.resize(1185, 630)
+        Window.resize(1200, 600)
         self.gridLayout = QtWidgets.QGridLayout(Window)
         self.gridLayout.setObjectName("gridLayout")
         self.pathLayout = QtWidgets.QSplitter(parent=Window)
@@ -66,7 +66,6 @@ class Ui_Window(object):
         self.referencePic.setSizePolicy(sizePolicy)
         self.referencePic.setMinimumSize(QtCore.QSize(250, 250))
         self.referencePic.setObjectName("referencePic")
-        self.referencePic.resize(300, 300)
         self.referenceLayout.addWidget(self.referencePic)
         self.belowLayout.addLayout(self.referenceLayout)
         self.generatedLayout = QtWidgets.QVBoxLayout()
@@ -82,7 +81,6 @@ class Ui_Window(object):
         self.generatedPic.setSizePolicy(sizePolicy)
         self.generatedPic.setMinimumSize(QtCore.QSize(250, 250))
         self.generatedPic.setObjectName("generatedPic")
-        self.generatedPic.resize(300, 300)
         self.generatedLayout.addWidget(self.generatedPic)
         self.belowLayout.addLayout(self.generatedLayout)
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
@@ -136,7 +134,7 @@ class Ui_Window(object):
     def retranslateUi(self, Window):
         _translate = QtCore.QCoreApplication.translate
         Window.setWindowTitle(_translate("Window", "Dialog"))
-        self.importLable.setText(_translate("Window", "Style Path:        "))
+        self.importLable.setText(_translate("Window", "Style Path:"))
         self.importOpenBtn.setText(_translate("Window", "Open"))
         self.loadPath.setText(_translate("Window", "Load All Path"))
         self.referenceLabel.setText(_translate("Window", "Refrence Path:"))

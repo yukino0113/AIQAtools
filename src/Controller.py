@@ -32,9 +32,6 @@ class MainWindowController(QtWidgets.QMainWindow):
         self.ui.nextPic.clicked.connect(self.next_image)
         self.ui.previousPic.clicked.connect(self.previous_image)
 
-        for i in [self.ui.nextPic, self.ui.skipPic, self.ui.previousPic]:
-            i.setEnabled(False)
-
     def import_path(self) -> None:
         folder_path = QFileDialog.getExistingDirectory(self, '請選擇輸入路徑')
         if folder_path:

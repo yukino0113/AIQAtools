@@ -117,10 +117,10 @@ class MainWindowController(QDialog, Ui_Window):
         if not self.genImage.imagePathList:
             return QMessageBox.critical(None, "Error", "路徑沒有任何圖片")
 
-        self.ui.fileNameLabel.setText(os.path.basename(self.genImage.currentImage).split('.')[0])
-
-        # this label ui has not been make
-        # self.ui.referenceLabel.setText('_'.join(os.path.basename(self.genImage.currentImage).split("_")[:2]))
+        self.ui.generatedLabel.setText(f'Generated image: '
+                                       f'{os.path.basename(self.genImage.currentImage).split(".")[0]}')
+        self.ui.referenceLabel.setText(f'Reference Image: '
+                                       f'{"_".join(os.path.basename(self.genImage.currentImage).split("_")[:2])}')
 
         gen_path = self.genImage.currentImage
         # todo: check base name

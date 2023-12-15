@@ -117,18 +117,22 @@ class MainWindowController(QDialog, Ui_Window):
         if not self.genImage.imagePathList:
             return QMessageBox.critical(None, "Error", "路徑沒有任何圖片")
 
-        self.ui.generatedLabel.setText(f'Generated image: '
-                                       f'{os.path.basename(self.genImage.currentImage).split(".")[0]}')
-        self.ui.referenceLabel.setText(f'Reference Image: '
-                                       f'{"_".join(os.path.basename(self.genImage.currentImage).split("_")[:2])}')
+        def set_file_name_and_progress():
+            self.ui.generatedLabel.setText(f'Generated image: '
+                                           f'{os.path.basename(self.genImage.currentImage).split(".")[0]}')
+            self.ui.referenceImageLabel.setText(f'Reference Image: '
+                                                f'{"_".join(os.path.basename(self.genImage.currentImage).split("_")[:2])}')
+            self.ui.progressLabel.setText(f'Progress: '
+                                          f'{self.genImage.currentImageIndex + 1}/{len(self.genImage.imagePathList)}')
 
         gen_path = self.genImage.currentImage
         # todo: check base name
-        ref_path = ic(f'{self.refImage.imagePathList["_".join(os.path.basename(self.genImage.currentImage).split("_")[:2])]}')
-        ic(ref_path)
+        ref_path = \
+            f'{self.refImage.imagePathList["_".join(os.path.basename(self.genImage.currentImage).split("_")[:2])]}'
 
         set_image(self.ui.generatedPic, gen_path)
         set_image(self.ui.referencePic, reorient_img(ref_path))
+        set_file_name_and_progress()
 
     def reset_cb(self):
         [checkbox.setChecked(False) for checkbox in self.issueList]

@@ -56,7 +56,7 @@ class MainWindowController(QDialog, Ui_Window):
             except IndexError:
                 QMessageBox.critical(None, "Error", "路徑為不包含圖片的 Style 資料夾，請再檢查一次")
 
-            for i in [self.ui.nextPic, self.ui.skipPic, self.ui.previousPic]:
+            for i in [self.ui.nextPic, self.ui.previousPic]:
                 i.setEnabled(True)
 
     def load_image(self):

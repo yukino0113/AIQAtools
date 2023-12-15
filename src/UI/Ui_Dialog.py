@@ -134,15 +134,23 @@ class Ui_Window(object):
     def retranslateUi(self, Window):
         _translate = QtCore.QCoreApplication.translate
         Window.setWindowTitle(_translate("Window", "Dialog"))
+
+        # Path related string
         self.importLable.setText(_translate("Window", "Style Path:"))
         self.importOpenBtn.setText(_translate("Window", "Open"))
-        self.loadPath.setText(_translate("Window", "Load All Path"))
-        self.referenceLabel.setText(_translate("Window", "Refrence Path:"))
+        self.referenceLabel.setText(_translate("Window", "Reference Path:"))
         self.exportOpenBtn.setText(_translate("Window", "Open"))
+        self.loadPath.setText(_translate("Window", "Load All Path"))
+
+        # File name related string
         self.referenceImageLabel.setText(_translate("Window", "Reference Image: "))
         self.generatedLabel.setText(_translate("Window", "Generated image:"))
+
+        # Progress string
         self.progressLabel.setText(_translate("Window", "Progress:"))
         self.exampleCB.setText(_translate("Window", "example"))
+
+        # Buttons
         self.previousPic.setText(_translate("Window", "Previous"))
         self.nextPic.setText(_translate("Window", "Next"))
 

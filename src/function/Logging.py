@@ -4,8 +4,9 @@ from datetime import datetime
 
 class Logging:
 
-    def __init__(self):
-        self.log_path = os.path.join(os.getcwd(), 'log.txt')
+    @staticmethod
+    def get_time():
+        return datetime.now().strftime("%H:%M:%S")
 
     def clear_log(self):
         open(self.log_path, 'w').close()

@@ -195,7 +195,5 @@ class MainWindowController(QDialog, Ui_Window, Logging):
             quit_window = QMessageBox.question(self, 'Message', f'是否要離開本程式',
                                                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if quit_window == QMessageBox.StandardButton.Yes:
-                self.sl.log_final_summary()
-                os.startfile(os.path.join(os.path.dirname(self.ui.importPath.text()), 'result'))
-                os.startfile(os.path.join(os.path.dirname(self.ui.importPath.text()), 'result', 'log.txt'))
+                os.startfile(os.path.join(self.ui.importPath.text(), 'result'))
                 sys.exit()

@@ -27,10 +27,6 @@ class MainWindowController(QDialog, Ui_Window, Logging):
 
         self.issueList = [getattr(self.ui, obj_name) for obj_name in dir(self.ui) if obj_name.endswith("CB")]
 
-        self.ui.importPath.setText(r"C:\Users\jethro_wang\Desktop\1205\Style_008_Party_Pink")
-        self.ui.exportPath.setText(r"C:\Users\jethro_wang\Desktop\1205source")
-        self.ui.loadPath.click()
-
     def setup_control(self):
         self.ui.importOpenBtn.clicked.connect(self.import_path)
         self.ui.exportOpenBtn.clicked.connect(self.export_path)
@@ -195,5 +191,7 @@ class MainWindowController(QDialog, Ui_Window, Logging):
             quit_window = QMessageBox.question(self, 'Message', f'是否要離開本程式',
                                                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if quit_window == QMessageBox.StandardButton.Yes:
-                os.startfile(os.path.join(self.ui.importPath.text(), 'result'))
+                self.sl.log_final_summary()
+                os.startfile(os.path.join(os.path.dirname(self.ui.importPath.text()), 'result'))
+                os.startfile(os.path.join(os.path.dirname(self.ui.importPath.text()), 'result', 'log.txt'))
                 sys.exit()

@@ -7,10 +7,18 @@ class Logging:
     def get_time():
         return datetime.now().strftime("%H:%M:%S")
 
-    def clear_log(self):
-        open(self.log_path, 'w').close()
+    def log(self, function, message, log_path):
+        with open(log_path, 'a+', encoding='utf-8') as f:
+            f.write(f'[{self.get_time()}] [{function}] {message}\n')
 
-    def log(self, function, message):
-        time = datetime.now().strftime("%H:%M:%S")
-        with open(self.log_path, 'a') as f:
-            f.write(f'[{time} {function}] {message}\n')
+    def log_end(self, log_path):
+        with open(log_path, 'a+', encoding='utf-8') as f:
+            f.write(f'[{self.get_time()}] [Test End] [準備輸出摘要]\n')
+            for _ in range(3):
+                f.write(f'[{self.get_time()}] [] \n')
+
+
+    def log_summary(self, issue, quantity, log_path):
+        with open(log_path, 'a+', encoding='utf-8') as f:
+            f.write(f'[{self.get_time()}] [Summary] {issue}: {quantity}\n')
+

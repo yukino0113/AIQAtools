@@ -22,6 +22,7 @@ class MainWindowController(QDialog, Ui_Window):
         self.ui = Ui_Window()
         self.ui.setupUi(self)
         self.setup_control()
+        self.showMaximized()
 
         self.issueList = [getattr(self.ui, obj_name) for obj_name in dir(self.ui) if obj_name.endswith("CB")]
 

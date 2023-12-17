@@ -7,8 +7,8 @@ from icecream import ic
 class GeneratedImage(Logging):
 
     def __init__(self, path):
-        super().__init__()
         self.path = path
+        self.log_path = os.path.join(os.path.dirname(path), 'result', 'log.txt')
         self.imagePathList = self._get_path()
 
         self.currentImageIndex = 0

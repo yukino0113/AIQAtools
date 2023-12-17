@@ -1,7 +1,5 @@
 import os
 from .Logging import Logging
-from pathlib import Path
-from icecream import ic
 
 
 class GeneratedImage(Logging):

@@ -17,7 +17,6 @@ class Logging:
             for _ in range(3):
                 f.write(f'[{self.get_time()}] [] \n')
 
-
     def log_summary(self, issue, quantity, log_path):
         with open(log_path, 'a+', encoding='utf-8') as f:
             f.write(f'[{self.get_time()}] [Summary] {issue}: {quantity}\n')

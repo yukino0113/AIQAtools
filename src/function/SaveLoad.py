@@ -3,8 +3,6 @@ import shutil
 
 from src.function.Logging import Logging
 
-from icecream import ic
-
 
 class SaveLoad(Logging):
 

@@ -1,6 +1,5 @@
 import os
 from ..function.Logging import Logging
-from icecream import ic
 
 
 class ReferenceImage(Logging):

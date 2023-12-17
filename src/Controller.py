@@ -5,7 +5,6 @@ from PyQt6 import QtWidgets, QtGui
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import QFileDialog, QMessageBox, QDialog
 from PIL import Image, ExifTags
-from icecream import ic
 
 from src.UI.Ui_Dialog import Ui_Window
 from src.function.GeneratedImage import GeneratedImage

@@ -27,10 +27,6 @@ class MainWindowController(QDialog, Ui_Window, Logging):
 
         self.issueList = [getattr(self.ui, obj_name) for obj_name in dir(self.ui) if obj_name.endswith("CB")]
 
-        self.ui.importPath.setText(r"C:\Users\jethro_wang\Desktop\1205\Style_008_Party_Pink")
-        self.ui.exportPath.setText(r"C:\Users\jethro_wang\Desktop\1205source")
-        self.ui.loadPath.click()
-
     def setup_control(self):
         self.ui.importOpenBtn.clicked.connect(self.import_path)
         self.ui.exportOpenBtn.clicked.connect(self.export_path)

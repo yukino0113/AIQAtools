@@ -3,25 +3,26 @@ import sys
 
 from PyQt6 import QtWidgets, QtGui
 from PyQt6.QtGui import QColor
-from PyQt6.QtWidgets import QFileDialog, QMessageBox
+from PyQt6.QtWidgets import QFileDialog, QMessageBox, QDialog
 from PIL import Image, ExifTags
 from icecream import ic
 
-from src.UI.Ui_Dialog import Ui_Dialog
+from src.UI.Ui_Dialog import Ui_Window
 from src.function.GeneratedImage import GeneratedImage
 from src.function.ReferenceImage import ReferenceImage
 from src.function.SaveLoad import SaveLoad
 
 
-class MainWindowController(QtWidgets.QMainWindow):
+class MainWindowController(QDialog, Ui_Window):
     def __init__(self):
         super().__init__()
         self.genImage = None
         self.refImage = None
         self.sl = None
-        self.ui = Ui_Dialog()
+        self.ui = Ui_Window()
         self.ui.setupUi(self)
         self.setup_control()
+        self.showMaximized()
 
         self.issueList = [getattr(self.ui, obj_name) for obj_name in dir(self.ui) if obj_name.endswith("CB")]
 
@@ -32,8 +33,17 @@ class MainWindowController(QtWidgets.QMainWindow):
         self.ui.nextPic.clicked.connect(self.next_image)
         self.ui.previousPic.clicked.connect(self.previous_image)
 
-        for i in [self.ui.nextPic, self.ui.skipPic, self.ui.previousPic]:
-            i.setEnabled(False)
+    def setup_checkbox(self):
+        def _get_issue():
+            issue = {}
+            with open(f'{os.path.dirname(os.path.realpath(__file__))}/../../issue_list.txt', 'r', encoding='utf-8') as f:
+                for line in f.read().split('\n'):
+                    if ':' in line and not line.startswith('#'):
+                        key, value = line.split(":")
+                        issue[key] = value
+                issue['正常'] = '正常'
+                issue['已完成照片備存'] = '已完成照片備存'
+                return issue
 
     def import_path(self) -> None:
         folder_path = QFileDialog.getExistingDirectory(self, '請選擇輸入路徑')
@@ -59,7 +69,7 @@ class MainWindowController(QtWidgets.QMainWindow):
             except IndexError:
                 QMessageBox.critical(None, "Error", "路徑為不包含圖片的 Style 資料夾，請再檢查一次")
 
-            for i in [self.ui.nextPic, self.ui.skipPic, self.ui.previousPic]:
+            for i in [self.ui.nextPic, self.ui.previousPic]:
                 i.setEnabled(True)
 
     def load_image(self):
@@ -72,12 +82,12 @@ class MainWindowController(QtWidgets.QMainWindow):
         def set_fit(view, scene):
             aspect_ratio = scene.sceneRect().height() / scene.sceneRect().width()
 
-            ratio = 10
+            ratio = 100
             view_width = view.viewport().width() * ratio
             view_height = aspect_ratio * view_width
 
             while view_height > self.ui.generatedPic.height() or view_width > self.ui.generatedPic.width():
-                ratio -= 0.05
+                ratio -= 0.01
                 view_width = view.viewport().width() * ratio
                 view_height = aspect_ratio * view_width
 
@@ -87,12 +97,6 @@ class MainWindowController(QtWidgets.QMainWindow):
 
         def set_black_bg(view):
             view.setBackgroundBrush(QColor(0, 0, 0))
-
-        def set_image(view, path):
-            scene = set_scene(QtGui.QPixmap(path))
-            view.setScene(scene)
-            set_fit(view, scene)
-            set_black_bg(view)
 
         def reorient_img(path):
             try:
@@ -120,21 +124,33 @@ class MainWindowController(QtWidgets.QMainWindow):
         if not self.genImage.imagePathList:
             return QMessageBox.critical(None, "Error", "路徑沒有任何圖片")
 
-        self.ui.fileNameLabel.setText(os.path.basename(self.genImage.currentImage).split('.')[0])
-
-        # this label ui has not been make
-        # self.ui.referenceLabel.setText('_'.join(os.path.basename(self.genImage.currentImage).split("_")[:2]))
+        def set_file_name_and_progress():
+            self.ui.generatedLabel.setText(f'Generated image: '
+                                           f'{os.path.basename(self.genImage.currentImage).split(".")[0]}')
+            self.ui.referenceImageLabel.setText(f'Reference Image: '
+                                                f'{os.path.basename(ref_path).split(".")[0]}')
+            self.ui.progressLabel.setText(f'Progress: '
+                                          f'{self.genImage.currentImageIndex + 1}/{len(self.genImage.imagePathList)}')
 
         gen_path = self.genImage.currentImage
         # todo: check base name
-        ref_path = ic(f'{self.refImage.imagePathList["_".join(os.path.basename(self.genImage.currentImage).split("_")[:2])]}')
-        ic(ref_path)
+        ref_path = \
+            f'{self.refImage.imagePathList["_".join(os.path.basename(self.genImage.currentImage).split("_")[:2])]}'
 
-        set_image(self.ui.generatedPic, gen_path)
-        set_image(self.ui.referencePic, reorient_img(ref_path))
+        gen_scene = set_scene(QtGui.QPixmap(gen_path))
+        self.ui.generatedPic.setScene(gen_scene)
+        set_fit(self.ui.generatedPic, gen_scene)
+        set_black_bg(self.ui.generatedPic)
+
+        ref_scene = set_scene(QtGui.QPixmap(reorient_img(ref_path)))
+        self.ui.referencePic.setScene(ref_scene)
+        set_fit(self.ui.referencePic, ref_scene)
+        set_black_bg(self.ui.referencePic)
+
+        set_file_name_and_progress()
 
     def reset_cb(self):
-        [checkbox.setChecked(False) for checkbox in self.issueList]
+        [self.ui.issueCBs[issueCB].setChecked(False) for issueCB in self.ui.issueCBs.keys()]
 
     def previous_image(self):
         if not self.genImage.currentImageIndex > 0:
@@ -143,7 +159,8 @@ class MainWindowController(QtWidgets.QMainWindow):
 
         self.genImage.previous()
         issue_list = self.sl.load(self.genImage.currentImage)
-        [checkbox.setChecked(True) for checkbox in self.issueList if checkbox.text() in issue_list]
+        [self.ui.issueCBs[issueCB].setChecked(True) for issueCB in self.ui.issueCBs.keys()
+         if self.ui.issueCBs[issueCB].text() in issue_list]
         self.load_image()
 
     def next_image(self):
@@ -151,7 +168,8 @@ class MainWindowController(QtWidgets.QMainWindow):
         current_style = self.genImage.currentStyle
         current_image = self.genImage.currentImage
 
-        issue = [checkbox.text() for checkbox in self.issueList if checkbox.isChecked()]
+        issue = [self.ui.issueCBs[issueCB].text() for issueCB in self.ui.issueCBs.keys()
+                 if self.ui.issueCBs[issueCB].isChecked()]
 
         if not issue:
             no_issue = QMessageBox.question(self, 'Message', f'請確認圖片是否沒有任何問題',

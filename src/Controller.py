@@ -9,11 +9,12 @@ from icecream import ic
 
 from src.UI.Ui_Dialog import Ui_Window
 from src.function.GeneratedImage import GeneratedImage
+from src.function.Logging import Logging
 from src.function.ReferenceImage import ReferenceImage
 from src.function.SaveLoad import SaveLoad
 
 
-class MainWindowController(QDialog, Ui_Window):
+class MainWindowController(QDialog, Ui_Window, Logging):
     def __init__(self):
         super().__init__()
         self.genImage = None
@@ -52,10 +53,10 @@ class MainWindowController(QDialog, Ui_Window):
             QMessageBox.critical(None, "Error", "請先指定輸入/參考圖路徑")
         else:
             try:
-                self.genImage = GeneratedImage(self.ui.importPath.text())
-                self.refImage = ReferenceImage(self.ui.exportPath.text())
-                self.load_image()
                 self.sl = SaveLoad(self.ui.importPath.text())
+                self.genImage = GeneratedImage(self.ui.importPath.text())
+                self.refImage = ReferenceImage(self.ui.exportPath.text(), self.ui.importPath.text())
+                self.load_image()
             except FileNotFoundError:
                 QMessageBox.critical(None, "Error", "路徑錯誤，請再檢查一次")
             except IndexError:

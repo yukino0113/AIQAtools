@@ -37,18 +37,6 @@ class MainWindowController(QDialog, Ui_Window):
         self.ui.nextPic.clicked.connect(self.next_image)
         self.ui.previousPic.clicked.connect(self.previous_image)
 
-    def setup_checkbox(self):
-        def _get_issue():
-            issue = {}
-            with open(f'{os.path.dirname(os.path.realpath(__file__))}/../../issue_list.txt', 'r', encoding='utf-8') as f:
-                for line in f.read().split('\n'):
-                    if ':' in line and not line.startswith('#'):
-                        key, value = line.split(":")
-                        issue[key] = value
-                issue['正常'] = '正常'
-                issue['已完成照片備存'] = '已完成照片備存'
-                return issue
-
     def import_path(self) -> None:
         folder_path = QFileDialog.getExistingDirectory(self, '請選擇輸入路徑')
         if folder_path:

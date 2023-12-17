@@ -23,6 +23,9 @@ class SaveLoad(Logging):
         """
         self.issue = self._get_issue_template()
 
+    def clear_logs(self):
+        open(os.path.join(f'{self.resultPath}/log.txt'), 'w+', encoding='utf-8').close()
+
     def _check_and_create_result_folder(self):
         if not os.path.exists(self.resultPath):
             os.mkdir(self.resultPath)

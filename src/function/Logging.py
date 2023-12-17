@@ -7,7 +7,7 @@ class Logging:
     def get_time():
         return datetime.now().strftime("%H:%M:%S")
 
-    def log(self, function, message, log_path):
+    def log_message(self, function, message, log_path):
         with open(log_path, 'a+', encoding='utf-8') as f:
             f.write(f'[{self.get_time()}] [{function}] {message}\n')
 

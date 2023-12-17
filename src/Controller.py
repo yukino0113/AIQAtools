@@ -127,7 +127,7 @@ class MainWindowController(QDialog, Ui_Window):
             self.ui.generatedLabel.setText(f'Generated image: '
                                            f'{os.path.basename(self.genImage.currentImage).split(".")[0]}')
             self.ui.referenceImageLabel.setText(f'Reference Image: '
-                                                f'{"_".join(os.path.basename(self.genImage.currentImage).split("_")[:2])}')
+                                                f'{os.path.basename(ref_path).split(".")[0]}')
             self.ui.progressLabel.setText(f'Progress: '
                                           f'{self.genImage.currentImageIndex + 1}/{len(self.genImage.imagePathList)}')
 

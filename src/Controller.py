@@ -158,7 +158,8 @@ class MainWindowController(QDialog, Ui_Window):
 
         self.genImage.previous()
         issue_list = self.sl.load(self.genImage.currentImage)
-        [checkbox.setChecked(True) for checkbox in self.issueList if checkbox.text() in issue_list]
+        [self.ui.issueCBs[issueCB].setChecked(True) for issueCB in self.ui.issueCBs.keys()
+         if self.ui.issueCBs[issueCB].text() in issue_list]
         self.load_image()
 
     def next_image(self):
@@ -166,7 +167,8 @@ class MainWindowController(QDialog, Ui_Window):
         current_style = self.genImage.currentStyle
         current_image = self.genImage.currentImage
 
-        issue = [checkbox.text() for checkbox in self.issueList if checkbox.isChecked()]
+        issue = [self.ui.issueCBs[issueCB].text() for issueCB in self.ui.issueCBs.keys()
+                 if self.ui.issueCBs[issueCB].isChecked()]
 
         if not issue:
             no_issue = QMessageBox.question(self, 'Message', f'請確認圖片是否沒有任何問題',

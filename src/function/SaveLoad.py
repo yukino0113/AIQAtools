@@ -96,3 +96,27 @@ class SaveLoad(Logging):
                 issue_list.append(key)
         self.log_message('Load image', f'Loaded {os.path.basename(image)} from {issue_list}', self.log_path)
         return issue_list
+
+    def log_final_summary(self):
+
+        self.log_end(self.log_path)
+
+        image_sum = len(os.listdir(os.path.join(self.resultPath, self.style, '已完成照片備存')))
+
+        logs = {}
+        for key in self.issue.keys():
+            logs[key] = {}
+            logs[key]['quan'] = sum(1 for item in os.listdir(os.path.join(self.resultPath, self.style, self.issue[key]))
+                                    if not item.endswith('.txt'))
+
+        issue_sum = sum([logs[issue]['quan'] for issue in logs.keys()])
+
+        self.log_summary('張數', image_sum, self.log_path)
+        self.log_summary('整體', issue_sum, self.log_path)
+
+        for issue in logs.keys():
+            if issue not in ['正常', '已完成照片備存']:
+                self.log_summary(issue, logs[issue]['quan'], self.log_path)
+
+
+

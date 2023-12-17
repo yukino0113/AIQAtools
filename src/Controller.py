@@ -136,12 +136,20 @@ class MainWindowController(QDialog, Ui_Window):
         ref_path = \
             f'{self.refImage.imagePathList["_".join(os.path.basename(self.genImage.currentImage).split("_")[:2])]}'
 
-        set_image(self.ui.generatedPic, gen_path)
-        set_image(self.ui.referencePic, reorient_img(ref_path))
+        gen_scene = set_scene(QtGui.QPixmap(gen_path))
+        self.ui.generatedPic.setScene(gen_scene)
+        set_fit(self.ui.generatedPic, gen_scene)
+        set_black_bg(self.ui.generatedPic)
+
+        ref_scene = set_scene(QtGui.QPixmap(reorient_img(ref_path)))
+        self.ui.referencePic.setScene(ref_scene)
+        set_fit(self.ui.referencePic, ref_scene)
+        set_black_bg(self.ui.referencePic)
+
         set_file_name_and_progress()
 
     def reset_cb(self):
-        [checkbox.setChecked(False) for checkbox in self.issueList]
+        [self.ui.issueCBs[issueCB].setChecked(False) for issueCB in self.ui.issueCBs.keys()]
 
     def previous_image(self):
         if not self.genImage.currentImageIndex > 0:

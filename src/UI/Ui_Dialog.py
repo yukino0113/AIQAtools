@@ -21,7 +21,6 @@ class Ui_Window(object):
                         key, value = line.split(":")
                         issue[key] = value
                 issue['正常'] = '正常'
-                issue['已完成照片備存'] = '已完成照片備存'
                 return issue
 
         Window.setObjectName("Window")

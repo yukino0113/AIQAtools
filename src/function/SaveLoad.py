@@ -82,6 +82,8 @@ class SaveLoad(Logging):
                 self.log_message('Save image', f'Saved {file_name} to {issue_item}', self.log_path)
 
         for del_issue in self.get_delete_list(self.style, issue, image):
+            if del_issue == '已完成照片備存':
+                continue
             del_path = os.path.join(self.resultPath, self.style, self.issue[del_issue], file_name)
             os.remove(del_path)
             self.log_message('Delete image', f'Delete {file_name} from {del_issue}', self.log_path)

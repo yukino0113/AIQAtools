@@ -1,11 +1,13 @@
 import os
-
+from .Logging import Logging
+from pathlib import Path
 from icecream import ic
 
 
-class GeneratedImage:
+class GeneratedImage(Logging):
 
     def __init__(self, path):
+        super().__init__()
         self.path = path
         self.imagePathList = self._get_path()
 
@@ -40,7 +42,7 @@ class GeneratedImage:
                 if file.endswith('.png') or file.endswith('.jpg'):
                     image_lst.append(os.path.join(source_folder_path, file))
 
-        self.log.log('Load Generated Image', f'Loaded generated image from {source_folder_path}')
+        self.log('Load Generated Image', f'Loaded generated image from {self.path}')
         return image_lst
 
     def next(self):

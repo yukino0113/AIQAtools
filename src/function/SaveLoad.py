@@ -11,8 +11,10 @@ class SaveLoad(Logging):
     def __init__(self, path):
         super().__init__()
         self.resultPath = os.path.join(os.path.dirname(path), 'result')
+        self.log_path = os.path.join(self.resultPath, 'log.txt')
         self.style = None
         self._check_and_create_result_folder()
+        self.clear_logs()
 
         """
         issue structure:

@@ -32,6 +32,18 @@ class MainWindowController(QDialog, Ui_Window):
         self.ui.nextPic.clicked.connect(self.next_image)
         self.ui.previousPic.clicked.connect(self.previous_image)
 
+    def setup_checkbox(self):
+        def _get_issue():
+            issue = {}
+            with open(f'{os.path.dirname(os.path.realpath(__file__))}/../../issue_list.txt', 'r', encoding='utf-8') as f:
+                for line in f.read().split('\n'):
+                    if ':' in line and not line.startswith('#'):
+                        key, value = line.split(":")
+                        issue[key] = value
+                issue['正常'] = '正常'
+                issue['已完成照片備存'] = '已完成照片備存'
+                return issue
+
     def import_path(self) -> None:
         folder_path = QFileDialog.getExistingDirectory(self, '請選擇輸入路徑')
         if folder_path:
@@ -69,12 +81,12 @@ class MainWindowController(QDialog, Ui_Window):
         def set_fit(view, scene):
             aspect_ratio = scene.sceneRect().height() / scene.sceneRect().width()
 
-            ratio = 10
+            ratio = 100
             view_width = view.viewport().width() * ratio
             view_height = aspect_ratio * view_width
 
             while view_height > self.ui.generatedPic.height() or view_width > self.ui.generatedPic.width():
-                ratio -= 0.05
+                ratio -= 0.01
                 view_width = view.viewport().width() * ratio
                 view_height = aspect_ratio * view_width
 
@@ -84,12 +96,6 @@ class MainWindowController(QDialog, Ui_Window):
 
         def set_black_bg(view):
             view.setBackgroundBrush(QColor(0, 0, 0))
-
-        def set_image(view, path):
-            scene = set_scene(QtGui.QPixmap(path))
-            view.setScene(scene)
-            set_fit(view, scene)
-            set_black_bg(view)
 
         def reorient_img(path):
             try:

@@ -7,10 +7,23 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
+import os
 
 
 class Ui_Window(object):
     def setupUi(self, Window):
+
+        def _get_issue():
+            issue = {}
+            with open(f'{os.path.dirname(os.path.realpath(__file__))}/../../issue_list.txt', 'r', encoding='utf-8') as f:
+                for line in f.read().split('\n'):
+                    if ':' in line and not line.startswith('#'):
+                        key, value = line.split(":")
+                        issue[key] = value
+                issue['正常'] = '正常'
+                issue['已完成照片備存'] = '已完成照片備存'
+                return issue
+
         Window.setObjectName("Window")
         Window.resize(1200, 600)
         self.gridLayout = QtWidgets.QGridLayout(Window)
@@ -64,7 +77,7 @@ class Ui_Window(object):
         sizePolicy.setVerticalStretch(1)
         sizePolicy.setHeightForWidth(self.referencePic.sizePolicy().hasHeightForWidth())
         self.referencePic.setSizePolicy(sizePolicy)
-        self.referencePic.setMinimumSize(QtCore.QSize(250, 250))
+        self.referencePic.setMinimumSize(QtCore.QSize(800, 800))
         self.referencePic.setObjectName("referencePic")
         self.referenceLayout.addWidget(self.referencePic)
         self.belowLayout.addLayout(self.referenceLayout)
@@ -79,7 +92,7 @@ class Ui_Window(object):
         sizePolicy.setVerticalStretch(1)
         sizePolicy.setHeightForWidth(self.generatedPic.sizePolicy().hasHeightForWidth())
         self.generatedPic.setSizePolicy(sizePolicy)
-        self.generatedPic.setMinimumSize(QtCore.QSize(250, 250))
+        self.generatedPic.setMinimumSize(QtCore.QSize(800, 800))
         self.generatedPic.setObjectName("generatedPic")
         self.generatedLayout.addWidget(self.generatedPic)
         self.belowLayout.addLayout(self.generatedLayout)
@@ -94,12 +107,23 @@ class Ui_Window(object):
         self.progressLabel.setMaximumSize(QtCore.QSize(16777215, 12))
         self.progressLabel.setObjectName("progressLabel")
         self.progressCB.addWidget(self.progressLabel)
-        self.exampleCB = QtWidgets.QCheckBox(parent=Window)
-        self.exampleCB.setMinimumSize(QtCore.QSize(155, 0))
-        self.exampleCB.setObjectName("exampleCB")
-        self.progressCB.addWidget(self.exampleCB)
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+        self.verticalLayout_3.addLayout(self.progressCB)
+        self.verticalLayout_3.addWidget(self.widget)
+        self.belowLayout.addLayout(self.verticalLayout_3)
+        self.gridLayout.addLayout(self.belowLayout, 1, 0, 1, 1)
+
+        self.issueCBs = {}
+        for issue in _get_issue():
+            self.issueCBs[issue] = QtWidgets.QCheckBox(parent=Window)
+            self.issueCBs[issue].setMinimumSize(QtCore.QSize(155, 0))
+            self.issueCBs[issue].setObjectName("exampleCB")
+            self.issueCBs[issue].setText(QtCore.QCoreApplication.translate("Window", f"{issue}"))
+            self.progressCB.addWidget(self.issueCBs[issue])
+
+        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Expanding,
+                                           QtWidgets.QSizePolicy.Policy.Expanding)
         self.progressCB.addItem(spacerItem)
+
         self.buttonsLayout = QtWidgets.QWidget(parent=Window)
         self.buttonsLayout.setMinimumSize(QtCore.QSize(0, 23))
         self.buttonsLayout.setMaximumSize(QtCore.QSize(16777215, 23))
@@ -123,14 +147,10 @@ class Ui_Window(object):
         self.nextPic.setObjectName("nextPic")
         self.formLayout_2.setWidget(0, QtWidgets.QFormLayout.ItemRole.FieldRole, self.nextPic)
         self.progressCB.addWidget(self.buttonsLayout)
-        self.verticalLayout_3.addLayout(self.progressCB)
-        self.verticalLayout_3.addWidget(self.widget)
-        self.belowLayout.addLayout(self.verticalLayout_3)
-        self.gridLayout.addLayout(self.belowLayout, 1, 0, 1, 1)
+
 
         self.retranslateUi(Window)
         QtCore.QMetaObject.connectSlotsByName(Window)
-
     def retranslateUi(self, Window):
         _translate = QtCore.QCoreApplication.translate
         Window.setWindowTitle(_translate("Window", "Dialog"))
@@ -148,7 +168,6 @@ class Ui_Window(object):
 
         # Progress string
         self.progressLabel.setText(_translate("Window", "Progress:"))
-        self.exampleCB.setText(_translate("Window", "example"))
 
         # Buttons
         self.previousPic.setText(_translate("Window", "Previous"))

@@ -40,6 +40,7 @@ class GeneratedImage:
                 if file.endswith('.png') or file.endswith('.jpg'):
                     image_lst.append(os.path.join(source_folder_path, file))
 
+        self.log.log('Load Generated Image', f'Loaded generated image from {source_folder_path}')
         return image_lst
 
     def next(self):

@@ -138,6 +138,7 @@ class Ui_Window(object):
         self.previousPic.setMinimumSize(QtCore.QSize(75, 23))
         self.previousPic.setMaximumSize(QtCore.QSize(75, 23))
         self.previousPic.setObjectName("previousPic")
+
         self.formLayout_2.setWidget(0, QtWidgets.QFormLayout.ItemRole.LabelRole, self.previousPic)
         self.nextPic = QtWidgets.QPushButton(parent=self.buttonsLayout)
         self.nextPic.setEnabled(False)
@@ -150,6 +151,7 @@ class Ui_Window(object):
 
         self.retranslateUi(Window)
         QtCore.QMetaObject.connectSlotsByName(Window)
+        
     def retranslateUi(self, Window):
         _translate = QtCore.QCoreApplication.translate
         Window.setWindowTitle(_translate("Window", "Dialog"))

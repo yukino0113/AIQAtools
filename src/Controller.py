@@ -23,6 +23,7 @@ class MainWindowController(QDialog, Ui_Window, Logging):
         self.ui.setupUi(self)
         self.setup_control()
         self.showMaximized()
+        self.window().setWindowTitle("GAI QA tools")
 
         self.issueList = [getattr(self.ui, obj_name) for obj_name in dir(self.ui) if obj_name.endswith("CB")]
 

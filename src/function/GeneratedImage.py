@@ -11,7 +11,7 @@ class GeneratedImage(Logging):
 
         self.currentImageIndex = 0
 
-        self.currentStyle = path.split('\\')[-1]
+        self.currentStyle = os.path.basename(path)
         self.currentImage = self.imagePathList[self.currentImageIndex]
 
     def _get_path(self) -> list:

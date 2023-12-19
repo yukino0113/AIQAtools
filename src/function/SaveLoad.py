@@ -106,15 +106,18 @@ class SaveLoad(Logging):
         image_sum = len(os.listdir(os.path.join(self.resultPath, self.style, '已完成照片備存')))
 
         logs = {}
+        issue_count_list = []
         for key in self.issue.keys():
-            logs[key] = {}
-            logs[key]['quan'] = sum(1 for item in os.listdir(os.path.join(self.resultPath, self.style, self.issue[key]))
-                                    if not item.endswith('.txt'))
-
-        issue_sum = sum([logs[issue]['quan'] for issue in logs.keys()])
+            if key not in ['正常', '已完成照片備存']:
+                ic(key)
+                logs[key] = {}
+                item_count = [item for item in os.listdir(os.path.join(self.resultPath, self.style, self.issue[key]))
+                              if not item.endswith('.txt')]
+                logs[key]['quan'] = len(item_count)
+                issue_count_list += item_count
 
         self.log_summary('張數', image_sum, self.log_path)
-        self.log_summary('整體', issue_sum, self.log_path)
+        self.log_summary('整體', len(set(issue_count_list)), self.log_path)
 
         for issue in logs.keys():
             if issue not in ['正常', '已完成照片備存']:

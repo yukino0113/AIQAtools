@@ -9,6 +9,8 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 import os
 
+from PyQt6.QtGui import QFont
+
 
 class Ui_Window(object):
     def setupUi(self, Window):
@@ -103,8 +105,9 @@ class Ui_Window(object):
         self.progressCB = QtWidgets.QVBoxLayout(self.widget)
         self.progressCB.setObjectName("progressCB")
         self.progressLabel = QtWidgets.QLabel(parent=Window)
-        self.progressLabel.setMaximumSize(QtCore.QSize(16777215, 12))
+        self.progressLabel.setMaximumSize(QtCore.QSize(16777215, 20))
         self.progressLabel.setObjectName("progressLabel")
+        self.progressLabel.setFont(QFont('Arial', 12))
         self.progressCB.addWidget(self.progressLabel)
         self.verticalLayout_3.addLayout(self.progressCB)
         self.verticalLayout_3.addWidget(self.widget)
@@ -117,6 +120,8 @@ class Ui_Window(object):
             self.issueCBs[issue].setMinimumSize(QtCore.QSize(155, 0))
             self.issueCBs[issue].setObjectName("exampleCB")
             self.issueCBs[issue].setText(QtCore.QCoreApplication.translate("Window", f"{issue}"))
+            self.issueCBs[issue].setFont(QFont('Arial', 10))
+
             self.progressCB.addWidget(self.issueCBs[issue])
 
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Expanding,

@@ -109,7 +109,6 @@ class SaveLoad(Logging):
         issue_count_list = []
         for key in self.issue.keys():
             if key not in ['正常', '已完成照片備存']:
-                ic(key)
                 logs[key] = {}
                 item_count = [item for item in os.listdir(os.path.join(self.resultPath, self.style, self.issue[key]))
                               if not item.endswith('.txt')]

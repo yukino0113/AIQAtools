@@ -58,7 +58,7 @@ class SaveLoad(Logging):
             issue['正常'] = '正常'
             issue['已完成照片備存'] = '已完成照片備存'
             self.log_message('Load issue txt', f'Issue template loaded from '
-                                       f'{os.path.dirname(os.path.realpath(__file__))}/../../issue_list.txt',
+                                               f'{os.path.dirname(os.path.realpath(__file__))}/../../issue_list.txt',
                              self.log_path)
             return issue
 
@@ -121,6 +121,3 @@ class SaveLoad(Logging):
         for issue in logs.keys():
             if issue not in ['正常', '已完成照片備存']:
                 self.log_summary(issue, logs[issue]['quan'], self.log_path)
-
-
-

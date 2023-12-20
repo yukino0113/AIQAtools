@@ -7,13 +7,14 @@ from PyQt6.QtWidgets import QFileDialog, QMessageBox, QDialog
 from PIL import Image, ExifTags
 
 from src.UI.Ui_Dialog import Ui_Window
+from src.function.ButtonFunction import ButtonFunction
 from src.function.GeneratedImage import GeneratedImage
 from src.function.Logging import Logging
 from src.function.ReferenceImage import ReferenceImage
 from src.function.SaveLoad import SaveLoad
 
 
-class MainWindowController(QDialog, Ui_Window, Logging):
+class MainWindowController(QDialog, Ui_Window, ButtonFunction, Logging):
     def __init__(self):
         super().__init__()
         self.genImage = None

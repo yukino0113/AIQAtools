@@ -129,7 +129,6 @@ class MainWindowController(QDialog, Ui_Window, ButtonFunction, Logging):
 
         set_file_name_and_progress()
 
-    def reset_cb(self):
         [self.ui.issueCBs[issueCB].setChecked(False) for issueCB in self.ui.issueCBs.keys()]
 
     def previous_image(self):

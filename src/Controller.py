@@ -159,11 +159,7 @@ class MainWindowController(QDialog, Ui_Window, ButtonFunction, Logging):
 
         delete_list = self.sl.get_delete_list(current_style, issue, current_image)
 
-        if '已完成照片備存' in delete_list:
-            delete_list.remove('已完成照片備存')
-
         if delete_list:
-
             delete = QMessageBox.question(self, 'Message', f'是否沒有以下問題:\n{", ".join(delete_list)}',
                                           QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if delete == QMessageBox.StandardButton.No:

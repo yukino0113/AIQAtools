@@ -29,21 +29,11 @@ class MainWindowController(QDialog, Ui_Window, ButtonFunction, Logging):
         self.issueList = [getattr(self.ui, obj_name) for obj_name in dir(self.ui) if obj_name.endswith("CB")]
 
     def setup_control(self):
-        self.ui.importOpenBtn.clicked.connect(self.import_path)
-        self.ui.exportOpenBtn.clicked.connect(self.export_path)
+        self.ui.importOpenBtn.clicked.connect(self.import_file_picker)
+        self.ui.exportOpenBtn.clicked.connect(self.reference_file_picker)
         self.ui.loadPath.clicked.connect(self.load_path)
         self.ui.nextPic.clicked.connect(self.next_image)
         self.ui.previousPic.clicked.connect(self.previous_image)
-
-    def import_path(self) -> None:
-        folder_path = QFileDialog.getExistingDirectory(self, '請選擇輸入路徑')
-        if folder_path:
-            self.ui.importPath.setText(folder_path)
-
-    def export_path(self) -> None:
-        folder_path = QFileDialog.getExistingDirectory(self, '請選擇輸入路徑')
-        if folder_path:
-            self.ui.exportPath.setText(folder_path)
 
     def load_path(self) -> None:
         if not self.ui.importPath.text() or not self.ui.exportPath.text():

@@ -129,17 +129,12 @@ class MainWindowController(QDialog, Ui_Window, ButtonFunction, Logging):
 
         set_file_name_and_progress()
 
-        [self.ui.issueCBs[issueCB].setChecked(False) for issueCB in self.ui.issueCBs.keys()]
-
     def previous_image(self):
         if not self.genImage.currentImageIndex > 0:
-            # todo: change to disable button?
             return QMessageBox.critical(None, "Error", "目前已經是第一張")
 
         self.genImage.previous()
-        issue_list = self.sl.load(self.genImage.currentImage)
-        [self.ui.issueCBs[issueCB].setChecked(True) for issueCB in self.ui.issueCBs.keys()
-         if self.ui.issueCBs[issueCB].text() in issue_list]
+        self.set_checkbox(self.sl.load(self.genImage.currentImage))
         self.load_image()
 
     def next_image(self):

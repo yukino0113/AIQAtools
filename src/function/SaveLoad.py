@@ -69,7 +69,13 @@ class SaveLoad(Logging):
         exist_list = [x for x in self.issue.keys()
                       if os.path.basename(image)
                       in os.listdir(os.path.join(self.resultPath, self.style, self.issue[x]))]
-        return [x for x in exist_list if x not in issue]
+
+        issue_list = [x for x in exist_list if x not in issue]
+
+        if '已完成照片備存' in issue_list:
+            issue_list.remove('已完成照片備存')
+
+        return issue_list
 
     def save(self, style: str, issue: list, image: str):
         self.style = style

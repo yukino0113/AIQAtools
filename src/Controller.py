@@ -158,8 +158,7 @@ class MainWindowController(QDialog, Ui_Window, ButtonFunction, Logging):
         current_style = self.genImage.currentStyle
         current_image = self.genImage.currentImage
 
-        issue = [self.ui.issueCBs[issueCB].text() for issueCB in self.ui.issueCBs.keys()
-                 if self.ui.issueCBs[issueCB].isChecked()]
+        issue = self.get_checked_checkbox_list()
 
         if not issue:
             no_issue = QMessageBox.question(self, 'Message', f'請確認圖片是否沒有任何問題',

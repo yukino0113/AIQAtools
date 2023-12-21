@@ -124,7 +124,7 @@ class MainWindowController(QDialog, Ui_Window, Logging):
         gen_path = self.genImage.currentImage
         # todo: check base name
         ref_path = \
-            f'{self.refImage.imagePathList["_".join(os.path.basename(self.genImage.currentImage).split("_")[:2])]}'
+            f'{self.refImage.imagePathList["".join(os.path.basename(self.genImage.currentImage).split("_")[0])]}'
 
         gen_scene = set_scene(QtGui.QPixmap(gen_path))
         self.ui.generatedPic.setScene(gen_scene)

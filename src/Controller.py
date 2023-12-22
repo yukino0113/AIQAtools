@@ -1,6 +1,8 @@
 import os
 import sys
 
+from icecream import ic
+
 from PyQt6 import QtWidgets, QtGui
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import QFileDialog, QMessageBox, QDialog
